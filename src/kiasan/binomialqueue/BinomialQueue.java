@@ -1,6 +1,8 @@
 package kiasan.binomialqueue;
 
-import kiasan.common.LinkedList;
+import java.util.LinkedList;
+
+import kiasan.common.ObjectArray;
 import kiasan.common.Underflow;
 
 /**
@@ -61,13 +63,13 @@ public class BinomialQueue {
   }
 
   private int currentSize; // # items in priority queue
-  private BinomialNode[] theTrees; // An array of tree roots
+  private ObjectArray<BinomialNode> theTrees; // An array of tree roots
 
   /**
    * Construct the binomial queue.
    */
   public BinomialQueue() {
-    this.theTrees = new BinomialNode[BinomialQueue.DEFAULT_TREES];
+    this.theTrees = new ObjectArray<BinomialNode>(BinomialQueue.DEFAULT_TREES);
     makeEmpty();
   }
 
@@ -76,8 +78,8 @@ public class BinomialQueue {
    */
   public BinomialQueue(final int item) {
     this.currentSize = 1;
-    this.theTrees = new BinomialNode[1];
-    this.theTrees[0] = new BinomialNode(item, null, null);
+    this.theTrees = new ObjectArray<BinomialNode>(1);
+    this.theTrees.set(0, new BinomialNode(item, null, null));
   }
 
   /**
@@ -110,9 +112,9 @@ public class BinomialQueue {
     }
 
     final int minIndex = findMinIndex();
-    final int minItem = this.theTrees[minIndex].element;
+    final int minItem = this.theTrees.get(minIndex).element;
 
-    BinomialNode deletedTree = this.theTrees[minIndex].leftChild;
+    BinomialNode deletedTree = this.theTrees.get(minIndex).leftChild;
 
     // Construct H''
     final BinomialQueue deletedQueue = new BinomialQueue();
@@ -120,13 +122,13 @@ public class BinomialQueue {
 
     deletedQueue.currentSize = (1 << minIndex) - 1;
     for (int j = minIndex - 1; j >= 0; j--) {
-      deletedQueue.theTrees[j] = deletedTree;
+      deletedQueue.theTrees.set(j, deletedTree);
       deletedTree = deletedTree.nextSibling;
-      deletedQueue.theTrees[j].nextSibling = null;
+      deletedQueue.theTrees.get(j).nextSibling = null;
     }
 
     // Construct H'
-    this.theTrees[minIndex] = null;
+    this.theTrees.set(minIndex, null);
     this.currentSize -= deletedQueue.currentSize + 1;
 
     merge(deletedQueue);
@@ -135,15 +137,15 @@ public class BinomialQueue {
   }
 
   private void expandTheTrees(final int newNumTrees) {
-    final BinomialNode[] old = this.theTrees;
+    final ObjectArray<BinomialNode> old = this.theTrees;
     final int oldNumTrees = this.theTrees.length;
 
-    this.theTrees = new BinomialNode[newNumTrees];
+    this.theTrees = new ObjectArray<BinomialNode>(newNumTrees);
     for (int i = 0; i < oldNumTrees; i++) {
-      this.theTrees[i] = old[i];
+      this.theTrees.set(i, old.get(i));
     }
     for (int i = oldNumTrees; i < newNumTrees; i++) {
-      this.theTrees[i] = null;
+      this.theTrees.set(i, null);
     }
   }
 
@@ -159,7 +161,7 @@ public class BinomialQueue {
       throw new Underflow();
     }
 
-    return this.theTrees[findMinIndex()].element;
+    return this.theTrees.get(findMinIndex()).element;
   }
 
   /**
@@ -172,13 +174,13 @@ public class BinomialQueue {
     int i;
     int minIndex;
 
-    for (i = 0; this.theTrees[i] == null; i++) {
+    for (i = 0; this.theTrees.get(i) == null; i++) {
       ;
     }
 
     for (minIndex = i; i < this.theTrees.length; i++) {
-      if ((this.theTrees[i] != null)
-          && (this.theTrees[i].element < this.theTrees[minIndex].element)) {
+      if ((this.theTrees.get(i) != null)
+          && (this.theTrees.get(i).element < this.theTrees.get(minIndex).element)) {
         minIndex = i;
       }
     }
@@ -205,7 +207,7 @@ public class BinomialQueue {
       if (seen.contains(start.leftChild)) {
         return false;
       }
-      seen.addToEnd(start.leftChild);
+      seen.addLast(start.leftChild);
       if (!isAcyclic(start.leftChild, seen)) {
         return false;
       }
@@ -215,7 +217,7 @@ public class BinomialQueue {
       if (seen.contains(ns)) {
         return false;
       }
-      seen.addToEnd(ns);
+      seen.addLast(ns);
       if (!isAcyclic(ns, seen)) {
         return false;
         //ns = ns.nextSibling;
@@ -239,7 +241,7 @@ public class BinomialQueue {
   public void makeEmpty() {
     this.currentSize = 0;
     for (int i = 0; i < this.theTrees.length; i++) {
-      this.theTrees[i] = null;
+      this.theTrees.set(i, null);
     }
   }
 
@@ -265,8 +267,8 @@ public class BinomialQueue {
 
     BinomialNode carry = null;
     for (int i = 0, j = 1; j <= this.currentSize; i++, j *= 2) {
-      final BinomialNode t1 = this.theTrees[i];
-      final BinomialNode t2 = i < rhs.theTrees.length ? rhs.theTrees[i] : null;
+      final BinomialNode t1 = this.theTrees.get(i);
+      final BinomialNode t2 = i < rhs.theTrees.length ? rhs.theTrees.get(i) : null;
 
       int whichCase = t1 == null ? 0 : 1;
       whichCase += t2 == null ? 0 : 2;
@@ -277,35 +279,36 @@ public class BinomialQueue {
         case 1: /* Only this */
           break;
         case 2: /* Only rhs */
-          this.theTrees[i] = t2;
-          rhs.theTrees[i] = null;
+          this.theTrees.set(i, t2);
+          rhs.theTrees.set(i, null);
           break;
         case 4: /* Only carry */
-          this.theTrees[i] = carry;
+          this.theTrees.set(i, carry);
           carry = null;
           break;
         case 3: /* this and rhs */
           carry = combineTrees(t1, t2);
-          this.theTrees[i] = rhs.theTrees[i] = null;
+          this.theTrees.set(i, null);
+          rhs.theTrees.set(i, null);
           break;
         case 5: /* this and carry */
           carry = combineTrees(t1, carry);
-          this.theTrees[i] = null;
+          this.theTrees.set(i, null);
           break;
         case 6: /* rhs and carry */
           carry = combineTrees(t2, carry);
-          rhs.theTrees[i] = null;
+          rhs.theTrees.set(i, null);
           break;
         case 7: /* All three */
-          this.theTrees[i] = carry;
+          this.theTrees.set(i, carry);
           carry = combineTrees(t1, t2);
-          rhs.theTrees[i] = null;
+          rhs.theTrees.set(i, null);
           break;
       }
     }
 
     for (int k = 0; k < rhs.theTrees.length; k++) {
-      rhs.theTrees[k] = null;
+      rhs.theTrees.set(k, null);
     }
     rhs.currentSize = 0;
   }
@@ -338,12 +341,12 @@ public class BinomialQueue {
     }
     final LinkedList<BinomialNode> seen = new LinkedList<BinomialNode>();
     for (int i = 0; i < this.theTrees.length; i++) {
-      if (this.theTrees[i] != null) {
-        if (seen.contains(this.theTrees[i])) {
+      if (this.theTrees.get(i) != null) {
+        if (seen.contains(this.theTrees.get(i))) {
           return false;
         }
-        seen.addToEnd(this.theTrees[i]);
-        if (!isAcyclic(this.theTrees[i], seen)) {
+        seen.addLast(this.theTrees.get(i));
+        if (!isAcyclic(this.theTrees.get(i), seen)) {
           return false;
         }
       }
@@ -363,17 +366,17 @@ public class BinomialQueue {
       if (size < 0) {
         return false;
       }
-      if ((size == 0) && (this.theTrees[i] != null)) {
+      if ((size == 0) && (this.theTrees.get(i) != null)) {
         return false;
       }
-      if (this.theTrees[i] != null) {
-        if (this.theTrees[i].nextSibling != null) {
+      if (this.theTrees.get(i) != null) {
+        if (this.theTrees.get(i).nextSibling != null) {
           return false;
         }
-        if (!wellStructuredBK(this.theTrees[i], i)) {
+        if (!wellStructuredBK(this.theTrees.get(i), i)) {
           return false;
         }
-        if (!ordered(this.theTrees[i])) {
+        if (!ordered(this.theTrees.get(i))) {
           return false;
         }
         size -= j;

@@ -1,6 +1,7 @@
 package kiasan.leftistheap;
 
-import kiasan.common.LinkedList;
+import java.util.LinkedList;
+
 import kiasan.common.Underflow;
 
 // LeftistHeap class
@@ -136,7 +137,7 @@ public class LeftistHeap {
       if (seen.contains(start.left)) {
         return false;
       }
-      seen.addToEnd(start.left);
+      seen.addLast(start.left);
       if (!isAcyclic(start.left, seen)) {
         return false;
       }
@@ -145,7 +146,7 @@ public class LeftistHeap {
       if (seen.contains(start.right)) {
         return false;
       }
-      seen.addToEnd(start.right);
+      seen.addLast(start.right);
       if (!isAcyclic(start.right, seen)) {
         return false;
       }
@@ -229,7 +230,7 @@ public class LeftistHeap {
     }
     final LinkedList<LeftistNode> seen = new LinkedList<LeftistNode>();
     if (this.root != null) {
-      seen.addToEnd(this.root);
+      seen.addLast(this.root);
       final boolean result = isAcyclic(this.root, seen) && ordered(this.root)
           && isLeftist(this.root);
       if (!result) {
@@ -240,7 +241,7 @@ public class LeftistHeap {
       if (seen.contains(rhs.root)) {
         return false;
       }
-      seen.addToEnd(rhs.root);
+      seen.addLast(rhs.root);
       return isAcyclic(rhs.root, seen) && ordered(rhs.root)
           && isLeftist(rhs.root);
     }
@@ -282,7 +283,7 @@ public class LeftistHeap {
       return true;
     }
     final LinkedList<LeftistNode> seen = new LinkedList<LeftistNode>();
-    seen.addToEnd(this.root);
+    seen.addLast(this.root);
     return isAcyclic(this.root, seen) && ordered(this.root)
         && isLeftist(this.root);
   }
