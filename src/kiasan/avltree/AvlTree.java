@@ -75,8 +75,12 @@ public class AvlTree {
   /**
    * Construct the tree.
    */
-  public AvlTree() {
+  private AvlTree() {
     this.root = null;
+  }
+  
+  public static AvlTree __new__() {
+	  return new AvlTree();
   }
 
   boolean balanced() {
@@ -311,7 +315,7 @@ public class AvlTree {
   /**
    * Print the tree contents in sorted order.
    */
-  public void printTree() {
+  void printTree() {
     if (isEmpty()) {
       System.out.println("Empty tree");
     } else {

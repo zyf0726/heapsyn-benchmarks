@@ -40,8 +40,12 @@ public class StackLi {
   /**
    * Construct the stack.
    */
-  public StackLi() {
+  private StackLi() {
     this.topOfStack = null;
+  }
+  
+  public static StackLi __new__() {
+	  return new StackLi();
   }
 
   private boolean contains(final Object e) {

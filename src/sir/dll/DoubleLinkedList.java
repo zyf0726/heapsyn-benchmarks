@@ -86,9 +86,15 @@ public class DoubleLinkedList {
     /**
      * Constructs an empty list.
      */
-    public DoubleLinkedList() {
+    private DoubleLinkedList() { // MODIFIED
         header.next = header.previous = header;
     }
+    
+// ADD BEGIN
+    public static DoubleLinkedList __new__() {
+    	return new DoubleLinkedList();
+    }
+// ADD END
 
     /**
      * Constructs a list containing the elements of the specified collection, in
@@ -99,48 +105,50 @@ public class DoubleLinkedList {
      * @throws NullPointerException
      *             if the specified collection is null.
      */
-    public DoubleLinkedList(Collection c) {
+    private DoubleLinkedList(Collection c) { // MODIFIED
         this();
         addAll(c);
     }
 
-    boolean repOK() {
-        if (header == null) {
-            return false;
-        }
-        Entry tmp = header;
-        int i = 0;
-        do {
-            if (!tmp.nonNullPointers() || !tmp.repOK()) {
-                return false;
-            }
-            tmp = tmp.next;
-            if (tmp != header) {
-                i++;
-            }
-        } while (tmp != header);
-        tmp = header;
-        return i == size;
-    }
+// REMOVE BEGIN
+//    boolean repOK() {
+//        if (header == null) {
+//            return false;
+//        }
+//        Entry tmp = header;
+//        int i = 0;
+//        do {
+//            if (!tmp.nonNullPointers() || !tmp.repOK()) {
+//                return false;
+//            }
+//            tmp = tmp.next;
+//            if (tmp != header) {
+//                i++;
+//            }
+//        } while (tmp != header);
+//        tmp = header;
+//        return i == size;
+//    }
 
-    public boolean test(DoubleLinkedList dll, Object o) {
-        dll.add(o);
-        return dll.getLast() == o;
-    }
+//    public boolean test(DoubleLinkedList dll, Object o) {
+//        dll.add(o);
+//        return dll.getLast() == o;
+//    }
 
-    boolean inList(Entry e) {
-        if (header == e) {
-            return true;
-        }
-        Entry tmp = header.next;
-        while (tmp != header) {
-            if (tmp == e) {
-                return true;
-            }
-            tmp = tmp.next;
-        }
-        return false;
-    }
+//    boolean inList(Entry e) {
+//        if (header == e) {
+//            return true;
+//        }
+//        Entry tmp = header.next;
+//        while (tmp != header) {
+//            if (tmp == e) {
+//                return true;
+//            }
+//            tmp = tmp.next;
+//        }
+//        return false;
+//    }
+// REMOVE END
 
     /**
      * Returns the first element in this list.
@@ -535,7 +543,7 @@ public class DoubleLinkedList {
         return new ListItr(index);
     }
 
-    private class ListItr implements ListIterator {
+    class ListItr implements ListIterator { // MODIFIED
         private Entry lastReturned = header;
         private Entry next;
         private int nextIndex;
@@ -629,7 +637,7 @@ public class DoubleLinkedList {
         }
     }
 
-    private static class Entry {
+    static class Entry { // MODIFIED
         Object element;
         Entry next;
         Entry previous;
@@ -704,22 +712,24 @@ public class DoubleLinkedList {
      *         correct order.
      */
     //@ ensures \result != null && \result.length == size;
-    public Object[] toArray() {
-        Object[] result = new Object[size];
-        int i = 0;
-        for (Entry e = header.next; e != header; e = e.next)
-            result[i++] = e.element;
-        return result;
-    }
+// REMOVE BEGIN
+//    public Object[] toArray() {
+//        Object[] result = new Object[size];
+//        int i = 0;
+//        for (Entry e = header.next; e != header; e = e.next)
+//            result[i++] = e.element;
+//        return result;
+//    }
 
-    boolean containsAllInOrder(Object[] objs) {
-        for (int i = 0; i < size; i++) {
-            if (get(i) != objs[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
+//    boolean containsAllInOrder(Object[] objs) {
+//        for (int i = 0; i < size; i++) {
+//            if (get(i) != objs[i]) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+// REMOVE END
 
     /**
      * Returns an array containing all of the elements in this list in the
@@ -746,19 +756,21 @@ public class DoubleLinkedList {
      * @throws NullPointerException
      *             if the specified array is null.
      */
-    public Object[] toArray(Object a[]) {
-        if (a.length < size)
-            a = (Object[]) java.lang.reflect.Array.newInstance(a.getClass()
-                    .getComponentType(), size);
-        int i = 0;
-        for (Entry e = header.next; e != header; e = e.next)
-            a[i++] = e.element;
+// REMOVE BEGIN
+//    public Object[] toArray(Object a[]) {
+//        if (a.length < size)
+//            a = (Object[]) java.lang.reflect.Array.newInstance(a.getClass()
+//                    .getComponentType(), size);
+//        int i = 0;
+//        for (Entry e = header.next; e != header; e = e.next)
+//            a[i++] = e.element;
 
-        if (a.length > size)
-            a[size] = null;
+//        if (a.length > size)
+//            a[size] = null;
 
-        return a;
-    }
+//        return a;
+//    }
+// REMOVE END
 
     private static final long serialVersionUID = 876323262645176354L;
 

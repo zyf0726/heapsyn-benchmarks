@@ -5,12 +5,17 @@ import java.util.NoSuchElementException;
 import kiasan.common.Range;
 
 public class TreeMap<V> {
+	
+	public static TreeMap<Object> __new__() {
+		return new TreeMap<Object>();
+	}
+	
   /**
    * Node in the Tree. Doubles as a means to pass key-value pairs back to user
    * (see Map.Entry).
    */
 
-  static public class Entry<V> {
+  static class Entry<V> {
     int key;
 
     V value;
@@ -722,7 +727,7 @@ public class TreeMap<V> {
    *           comparator does not tolerate <tt>null</tt> keys.
    */
 
-  public int realSize() {
+  int realSize() {
     if (this.root == null) {
       return 0;
     }

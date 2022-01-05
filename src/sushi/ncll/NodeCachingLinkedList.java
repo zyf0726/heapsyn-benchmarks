@@ -148,7 +148,7 @@ public class NodeCachingLinkedList {
 	 * Constructor that creates.
 	 */
 	
-    public NodeCachingLinkedList() {
+    private NodeCachingLinkedList() {
 		header = createHeaderNode();
 		size = 0;
 		cacheSize = 0;
@@ -163,6 +163,10 @@ public class NodeCachingLinkedList {
     	_minCacheSize = 0;
 //INSTRUMENTATION END
 	}
+    
+    public static NodeCachingLinkedList __new__() {
+    	return new NodeCachingLinkedList();
+    }
 	
 
 	//-----------------------------------------------------------------------
@@ -479,7 +483,7 @@ public class NodeCachingLinkedList {
 	}
 	//-----------------------------------------------------------------------
 	
-	private static class LinkedListNode {
+	static class LinkedListNode {
 
 	    /** A pointer to the node before this node */
 	    public /*@ nullable @*/LinkedListNode previous;

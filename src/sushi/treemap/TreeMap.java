@@ -9,7 +9,11 @@ import jbse.meta.Analysis;
 public class TreeMap<V>
 //STUB END
 {
-
+	
+	public static TreeMap<Object> __new__() {
+		return new TreeMap<Object>();
+	}
+	
     private transient Entry<V> root = null;
 
     /**
@@ -349,7 +353,7 @@ public class TreeMap<V>
      * (see Map.Entry).
      */
 
-    static private class Entry<V> {
+    static class Entry<V> {
         int key;
 
         V value;

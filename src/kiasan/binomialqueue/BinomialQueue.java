@@ -12,7 +12,7 @@ import kiasan.common.Underflow;
  * @author Mark Allen Weiss
  */
 public class BinomialQueue {
-  private static class BinomialNode {
+  static class BinomialNode {
     int element; // The data in the node
 
     BinomialNode leftChild; // Left child
@@ -68,18 +68,26 @@ public class BinomialQueue {
   /**
    * Construct the binomial queue.
    */
-  public BinomialQueue() {
+  private BinomialQueue() {
     this.theTrees = new ObjectArray<BinomialNode>(BinomialQueue.DEFAULT_TREES);
     makeEmpty();
+  }
+  
+  public static BinomialQueue __new__() {
+	  return new BinomialQueue();
   }
 
   /**
    * Construct with a single item.
    */
-  public BinomialQueue(final int item) {
+  private BinomialQueue(final int item) {
     this.currentSize = 1;
     this.theTrees = new ObjectArray<BinomialNode>(1);
     this.theTrees.set(0, new BinomialNode(item, null, null));
+  }
+  
+  public static BinomialQueue __new__(final int item) {
+	  return new BinomialQueue(item);
   }
 
   /**

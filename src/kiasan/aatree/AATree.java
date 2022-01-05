@@ -25,7 +25,7 @@ import kiasan.common.Underflow;
  * @author Mark Allen Weiss
  */
 public class AATree {
-  private static class AANode {
+  static class AANode {
     int element; // The data in the node
 
     AANode left; // Left child
@@ -91,11 +91,15 @@ public class AATree {
   /**
    * Construct the tree.
    */
-  public AATree() {
+  private AATree() {
     this.nullNode = new AANode(0, null, null);
     this.nullNode.left = this.nullNode.right = this.nullNode;
     this.nullNode.level = 0;
     this.root = this.nullNode;
+  }
+  
+  public static AATree __new__() {
+	  return new AATree();
   }
 
   /**

@@ -4,7 +4,7 @@ package kiasan.binsearchtree;
 // Note that this class is not accessible outside
 // of package DataStructures
 
-public class BinaryNode {
+class BinaryNode {
   // Friendly data; accessible by other package routines
   int element; // The data in the node
 
@@ -12,7 +12,7 @@ public class BinaryNode {
 
   BinaryNode right; // Right child
 
-  public BinaryNode() {
+  BinaryNode() {
     this(-1);
   }
 

@@ -96,14 +96,20 @@ import java.util.Vector;
  */
 
 public class LinkedList<E>
-    extends AbstractSequentialList<E>
-    implements List<E>, Deque<E>, Set<E>, Cloneable, java.io.Serializable
+// REMOVE BEGIN
+//    extends AbstractSequentialList<E>
+//    implements List<E>, Deque<E>, Set<E>, Cloneable, java.io.Serializable
+// REMOVE END
 {
 //MODI BEGIN
 	private transient Entry<E> header = new Entry<E>(null, null, null, this);
 	//private transient Entry<E> header = new Entry<E>(null, null, null);
 //MODI END
     private transient int size = 0;
+    
+// ADD BEGIN
+    private transient int modCount = 0;
+// ADD END
 
 //MODI BEGIN
     /*
@@ -135,7 +141,7 @@ public class LinkedList<E>
     /**
      * Constructs an empty list.
      */
-    public LinkedList() {
+    private LinkedList() { // MODIFIED
         header.next = header.previous = header;
 //MODI BEGIN
         //initializes instrumentation fields for concrete objects
@@ -153,10 +159,16 @@ public class LinkedList<E>
      * @param  c the collection whose elements are to be placed into this list
      * @throws NullPointerException if the specified collection is null
      */
-    public LinkedList(Collection<? extends E> c) {
+    private LinkedList(Collection<? extends E> c) { // MODIFIED
 	this();
 	addAll(c);
     }
+    
+// ADD BEGIN
+    public static LinkedList<Object> __new__() {
+    	return new LinkedList<Object>();
+    }
+// ADD END
 
     /**
      * Returns the first element in this list.
@@ -733,7 +745,7 @@ public class LinkedList<E>
 	return new ListItr(index);
     }
 
-    private class ListItr implements ListIterator<E> {
+    class ListItr implements ListIterator<E> { // MODIFIED
 	private Entry<E> lastReturned = header;
 	private Entry<E> next;
 	private int nextIndex;
@@ -831,7 +843,7 @@ public class LinkedList<E>
 	}
     }
 
-    private static class Entry<E> {
+    static class Entry<E> {
 	E element;
 	Entry<E> next;
 	Entry<E> previous;
@@ -927,7 +939,7 @@ public class LinkedList<E>
     }
 
     /** Adapter to provide descending iterators via ListItr.previous */
-    private class DescendingIterator implements Iterator {
+    class DescendingIterator implements Iterator { // MODIFIED
         final ListItr itr = new ListItr(size());
 	public boolean hasNext() {
 	    return itr.hasPrevious();
@@ -984,13 +996,15 @@ public class LinkedList<E>
      * @return an array containing all of the elements in this list
      *         in proper sequence
      */
-    public Object[] toArray() {
-	Object[] result = new Object[size];
-        int i = 0;
-        for (Entry<E> e = header.next; e != header; e = e.next)
-            result[i++] = e.element;
-	return result;
-    }
+// REMOVE BEGIN
+//    public Object[] toArray() {
+//	Object[] result = new Object[size];
+//        int i = 0;
+//        for (Entry<E> e = header.next; e != header; e = e.next)
+//            result[i++] = e.element;
+//	return result;
+//    }
+// REMOVE END
 
     /**
      * Returns an array containing all of the elements in this list in
@@ -1030,24 +1044,26 @@ public class LinkedList<E>
      *         this list
      * @throws NullPointerException if the specified array is null
      */
-	public <T> T[] toArray(T[] a) {
-        if (a.length < size)
+// REMOVE BEGIN
+//	public <T> T[] toArray(T[] a) {
+//        if (a.length < size)
 //MODI BEGIN
         	//JBSE does not fully support reflection
             /*a = (T[])java.lang.reflect.Array.newInstance(
                                 a.getClass().getComponentType(), size);*/
-        	a = (T[]) new Object[size];
+//        	a = (T[]) new Object[size];
 //MODI END
-        int i = 0;
-	Object[] result = a;
-        for (Entry<E> e = header.next; e != header; e = e.next)
-            result[i++] = e.element;
+//        int i = 0;
+//	Object[] result = a;
+//        for (Entry<E> e = header.next; e != header; e = e.next)
+//            result[i++] = e.element;
 
-        if (a.length > size)
-            a[size] = null;
+//        if (a.length > size)
+//            a[size] = null;
 
-        return a;
-    }
+//        return a;
+//    }
+// REMOVE END
 
     private static final long serialVersionUID = 876323262645176354L;
 
@@ -1096,9 +1112,11 @@ public class LinkedList<E>
             addBefore((E)s.readObject(), header);
     }
     
-	@Override
-	public Spliterator<E> spliterator() {
-		//foo implementation, for avoiding complaints with java 8
-		return null;
-	}
+// REMOVE BEGIN
+//	@Override
+//	public Spliterator<E> spliterator() {
+//		//foo implementation, for avoiding complaints with java 8
+//		return null;
+//	}
+// REMOVE END
 }

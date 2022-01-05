@@ -25,7 +25,7 @@ import kiasan.common.Underflow;
  * @author Mark Allen Weiss
  */
 public class LeftistHeap {
-  private static class LeftistNode {
+  static class LeftistNode {
     int element; // The data in the node
 
     LeftistNode left; // Left child
@@ -83,8 +83,12 @@ public class LeftistHeap {
   /**
    * Construct the leftist heap.
    */
-  public LeftistHeap() {
+  private LeftistHeap() {
     this.root = null;
+  }
+  
+  public static LeftistHeap __new__() {
+	  return new LeftistHeap();
   }
 
   /**

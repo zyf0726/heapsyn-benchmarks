@@ -59,13 +59,17 @@ public class BinarySearchTree {
   }
 
   /** The tree root. */
-  public BinaryNode root;
+  private BinaryNode root;
 
   /**
    * Construct the tree.
    */
-  public BinarySearchTree() {
+  private BinarySearchTree() {
     this.root = null;
+  }
+  
+  public static BinarySearchTree __new__() {
+	  return new BinarySearchTree();
   }
 
   /**
@@ -227,7 +231,7 @@ public class BinarySearchTree {
   /**
    * Print the tree contents in sorted order.
    */
-  public void printTree() {
+  void printTree() {
     if (isEmpty()) {
       System.out.println("Empty tree");
     } else {

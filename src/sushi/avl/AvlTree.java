@@ -102,8 +102,12 @@ public class AvlTree {
 	/**
 	 * Construct the tree.
 	 */
-	public AvlTree() {
+	private AvlTree() {
 		this.root = null;
+	}
+	
+	public static AvlTree __new__() {
+		return new AvlTree();
 	}
 
 	/**

@@ -1,12 +1,12 @@
 package kiasan.stack;
 
-public class ListNode {
+class ListNode {
   // Friendly data; accessible by other package routines
   Object element;
 
   ListNode next;
 
-  public ListNode() {
+  ListNode() {
   }
 
   // Constructors
