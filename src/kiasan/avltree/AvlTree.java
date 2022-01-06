@@ -343,9 +343,11 @@ public class AvlTree {
    * @param x
    *          the item to remove.
    */
+/*
   public void remove(final int x) {
     // System.out.println( "Sorry, remove unimplemented" );
   }
+*/
 
   boolean wellFormed() {
     return wellFormed(this.root);

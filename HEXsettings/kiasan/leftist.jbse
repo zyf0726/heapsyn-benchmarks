@@ -1,0 +1,9 @@
+resolve begin
+
+-- representation invariant for LeftistHeap
+
+-- acyclic
+{R_ANY}.kiasan/leftistheap/LeftistHeap:root(.kiasan/leftistheap/LeftistHeap$LeftistNode:left|.kiasan/leftistheap/LeftistHeap$LeftistNode:right)* instanceof kiasan/leftistheap/LeftistHeap$LeftistNode aliases nothing;
+
+
+resolve end

@@ -46,6 +46,7 @@ public class LeftistHeap {
     }
   }
 
+/*
   public static void main(final String[] args) {
     final int numItems = 100;
     final LeftistHeap h = new LeftistHeap();
@@ -68,6 +69,7 @@ public class LeftistHeap {
       }
     }
   }
+*/
 
   /**
    * Swaps t's two children.

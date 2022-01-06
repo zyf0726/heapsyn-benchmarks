@@ -25,6 +25,7 @@ import kiasan.common.Range;
 public class BinarySearchTree {
 
   // Test program
+/*
   public static void main(final String[] args) {
     final BinarySearchTree t = new BinarySearchTree();
     final int NUMS = 4000;
@@ -57,6 +58,7 @@ public class BinarySearchTree {
       // }
     }
   }
+*/
 
   /** The tree root. */
   private BinaryNode root;

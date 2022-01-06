@@ -42,6 +42,7 @@ public class AATree {
   }
 
   // Test program; should print min and max and nothing else
+  /*
   public static void main(final String[] args) {
     final AATree t = new AATree();
     final int NUMS = 40000;
@@ -79,6 +80,7 @@ public class AATree {
       }
     }
   }
+  */
 
   private AANode root;
 

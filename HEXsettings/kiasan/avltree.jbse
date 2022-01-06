@@ -1,0 +1,6 @@
+resolve begin
+
+-- root/left/right entries expand or are null
+{R_ANY}.kiasan/avltree/AvlTree:root(.kiasan/avltree/AvlNode:left|.kiasan/avltree/AvlNode:right)* instanceof kiasan/avltree/AvlNode aliases nothing;
+
+resolve end

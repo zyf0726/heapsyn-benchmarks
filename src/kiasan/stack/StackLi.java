@@ -23,6 +23,8 @@ import kiasan.common.Underflow;
  * @author Mark Allen Weiss
  */
 public class StackLi {
+
+/*
   public static void main(final String[] args) {
     final StackLi s = new StackLi();
 
@@ -34,6 +36,7 @@ public class StackLi {
       System.out.println(s.topAndPop());
     }
   }
+*/
 
   private ListNode topOfStack;
 
