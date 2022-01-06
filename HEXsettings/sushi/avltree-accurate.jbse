@@ -1,0 +1,17 @@
+resolve begin
+
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)* instanceof sushi/avl/AvlNode aliases nothing;
+{R_ANY}.sushi/avl/AvlTree:root instanceof sushi/avl/AvlNode expands to instanceof sushi/avl/AvlNode triggers sushi/avl/AvlNode:(Lsushi/avl/AvlNode;)V:_got_AvlNode_onRoot:{$REF};
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)*.sushi/avl/AvlNode:left instanceof sushi/avl/AvlNode expands to instanceof sushi/avl/AvlNode triggers sushi/avl/AvlNode:(Lsushi/avl/AvlNode;)V:_got_AvlNode_onTheLeft:{$REF};
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)*.sushi/avl/AvlNode:right instanceof sushi/avl/AvlNode expands to instanceof sushi/avl/AvlNode triggers sushi/avl/AvlNode:(Lsushi/avl/AvlNode;)V:_got_AvlNode_onTheRight:{$REF};
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)*.sushi/avl/AvlNode:left instanceof sushi/avl/AvlNode null triggers sushi/avl/AvlNode:(Lsushi/avl/AvlNode;)V:_got_null_onTheLeft:{$REF}.{UP};
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)*.sushi/avl/AvlNode:right instanceof sushi/avl/AvlNode null triggers sushi/avl/AvlNode:(Lsushi/avl/AvlNode;)V:_got_null_onTheRight:{$REF}.{UP};
+
+-- wellConnected
+{R_ANY}.sushi/avl/AvlTree:root.sushi/avl/AvlNode:parent instanceof sushi/avl/AvlNode expands to nothing;
+{R_ANY}.sushi/avl/AvlTree:root.sushi/avl/AvlNode:parent instanceof sushi/avl/AvlNode aliases nothing;
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)+.sushi/avl/AvlNode:parent instanceof sushi/avl/AvlNode not null;
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)+.sushi/avl/AvlNode:parent instanceof sushi/avl/AvlNode expands to nothing;
+{R_ANY}.sushi/avl/AvlTree:root(.sushi/avl/AvlNode:left|.sushi/avl/AvlNode:right)+.sushi/avl/AvlNode:parent instanceof sushi/avl/AvlNode aliases target {$REF}.{UP}.{UP};
+
+resolve end
