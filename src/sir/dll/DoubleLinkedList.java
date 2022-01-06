@@ -439,8 +439,7 @@ public class DoubleLinkedList {
      */
     private Entry entry(int index) {
         if (index < 0 || index >= size)
-            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "
-                                                + size);
+            throw new IndexOutOfBoundsException();
         Entry e = header;
         // if (index < (size >> 1)) { // Kiasan can not handle bit shifting
         // currently.
@@ -551,17 +550,10 @@ public class DoubleLinkedList {
 
         ListItr(int index) {
             if (index < 0 || index > size)
-                throw new IndexOutOfBoundsException("Index: " + index
-                                                    + ", Size: " + size);
-            if (index < (size >> 1)) {
-                next = header.next;
-                for (nextIndex = 0; nextIndex < index; nextIndex++)
-                    next = next.next;
-            } else {
-                next = header;
-                for (nextIndex = size; nextIndex > index; nextIndex--)
-                    next = next.previous;
-            }
+                throw new IndexOutOfBoundsException();
+			next = header.next;
+			for (nextIndex = 0; nextIndex < index; nextIndex++)
+				next = next.next;
         }
 
         public boolean hasNext() {
