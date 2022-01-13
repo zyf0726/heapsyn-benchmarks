@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import heapsyn.algo.DynamicGraphBuilder;
 import heapsyn.algo.HeapTransGraphBuilder;
 import heapsyn.algo.Statement;
 import heapsyn.algo.TestGenerator;
@@ -28,8 +29,9 @@ import static common.Settings.*;
 
 public class AvlLauncher {
 	
-	private static final int scope$AvlTree = 1;
-	private static final int scope$AvlNode = 6;
+	private static final int scope$AvlTree	= 1;
+	private static final int scope$AvlNode	= 6;
+	private static final int maxSeqLength	= 7;
 	private static final String hexFilePathAccurate = "HEXsettings/sushi/avltree-accurate.jbse";
 	private static final String hexFilePathPartial  = "HEXsettings/sushi/avltree-partial.jbse";
 	private static final String logFilePath 		= "tmp/sushi/avl.txt";
@@ -78,7 +80,7 @@ public class AvlLauncher {
 		return methods;
 	}
 	
-	private static void buildGraph(Collection<Method> methods, boolean simplify)
+	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
@@ -91,17 +93,38 @@ public class AvlLauncher {
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
 		testGenerator = new TestGenerator(heaps);
 		long end = System.currentTimeMillis();
-		System.out.println(">> buildGraph: " + (end - start) + "ms\n");
+		System.out.println(">> buildGraph (static): " + (end - start) + "ms\n");
+	}
+	
+	private static void buildGraphDynamic(Collection<Method> methods)
+			throws FileNotFoundException {
+		long start = System.currentTimeMillis();
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
+				name -> !name.startsWith("_"));
+		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
+		gb.setHeapScope(cls$AvlTree, scope$AvlTree);
+		gb.setHeapScope(cls$AvlNode, scope$AvlNode);
+		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
+		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
+		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
+		testGenerator = new TestGenerator(heaps);
+		long end = System.currentTimeMillis();
+		System.out.println(">> buildGraph (dynamic): " + (end - start) + "ms\n");
 	}
 	
 	public static void main(String[] args) throws Exception {
 		final boolean useAccurateSpec = true;
 		final boolean showOnConsole = true;
 		final boolean simplify = true;
+		final boolean useDynamicAlgorithm = true;
 		init(useAccurateSpec);
 		configure(showOnConsole);
 		List<Method> methods = getMethods();
-		buildGraph(methods, simplify);
+		if (useDynamicAlgorithm) {
+			buildGraphDynamic(methods);
+		} else {
+			buildGraphStatic(methods, simplify);
+		}
 		genTest4$1();
 		genTest4$2();
 		genTest6$1();

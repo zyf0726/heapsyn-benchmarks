@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import heapsyn.algo.DynamicGraphBuilder;
 import heapsyn.algo.HeapTransGraphBuilder;
 import heapsyn.algo.Statement;
 import heapsyn.algo.TestGenerator;
@@ -29,7 +30,8 @@ import static common.Settings.*;
 public class AvlLauncher {
 	
 	private static final int scope$AvlTree	= 1;
-	private static final int scope$AvlNode	= 5;
+	private static final int scope$AvlNode	= 6;
+	private static final int maxSeqLength	= 7;
 	private static final String hexFilePath	= "HEXsettings/kiasan/avltree.jbse";
 	private static final String logFilePath = "tmp/kiasan/avl.txt";
 	
@@ -75,7 +77,7 @@ public class AvlLauncher {
 		return methods;
 	}
 	
-	private static void buildGraph(Collection<Method> methods, boolean simplify)
+	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
@@ -88,18 +90,40 @@ public class AvlLauncher {
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
 		testGenerator = new TestGenerator(heaps);
 		long end = System.currentTimeMillis();
-		System.out.println(">> buildGraph: " + (end - start) + "ms\n");
+		System.out.println(">> buildGraph (static): " + (end - start) + "ms\n");
+	}
+	
+	private static void buildGraphDynamic(Collection<Method> methods)
+			throws FileNotFoundException {
+		long start = System.currentTimeMillis();
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
+				name -> !name.startsWith("_"));
+		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
+		gb.setHeapScope(cls$AvlTree, scope$AvlTree);
+		gb.setHeapScope(cls$AvlNode, scope$AvlNode);
+		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
+		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
+		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
+		testGenerator = new TestGenerator(heaps);
+		long end = System.currentTimeMillis();
+		System.out.println(">> buildGraph (dynamic): " + (end - start) + "ms\n");
 	}
 	
 	public static void main(String[] args) throws Exception {
 		final boolean showOnConsole = true;
 		final boolean simplify = true;
+		final boolean useDynamicAlgorithm = true;
 		init();
 		configure(showOnConsole);
 		List<Method> methods = getMethods();
-		buildGraph(methods, simplify);
+		if (useDynamicAlgorithm) {
+			buildGraphDynamic(methods);
+		} else {
+			buildGraphStatic(methods, simplify);
+		}
 		genTest1();
 		genTest2();
+		genTest3();
 	}
 	
 	private static void genTest1() {
@@ -138,4 +162,30 @@ public class AvlLauncher {
 		System.out.println(">> genTest2: " + (end - start) + "ms\n");
 	}
 
+	private static void genTest3() {
+		long start = System.currentTimeMillis();
+		SpecFactory specFty = new SpecFactory();
+		ObjectH avlTree = specFty.mkRefDecl(cls$AvlTree, "t");
+		specFty.addRefSpec("t", "root", "root");
+		specFty.addRefSpec("root", "element", "v3", "left", "root.l", "right", "root.r");
+		specFty.addRefSpec("root.l", "element", "v1", "left", "root.l.l", "right", "root.l.r");
+		specFty.addRefSpec("root.r", "element", "v4", "left", "null", "right", "root.r.r");
+		specFty.addRefSpec("root.l.l", "element", "v0", "left", "null", "right", "null");
+		specFty.addRefSpec("root.l.r", "element", "v2", "left", "null", "right", "null");
+		specFty.addRefSpec("root.r.r", "element", "v5", "left", "null", "right", "null");
+		specFty.setAccessible("t");
+		specFty.addVarSpec("(= (- v1 v0) 27)"); // v0 = -115
+		specFty.addVarSpec("(= (- v2 v1) 47)"); // v1 = -88
+		specFty.addVarSpec("(= (- v3 v2) 36)"); // v2 = -41
+		specFty.addVarSpec("(= (- v4 v3) 71)"); // v3 = -5
+		specFty.addVarSpec("(= (- v5 v4) 62)"); // v4 = 66
+		specFty.addVarSpec("(= (+ v0 v5) 13)"); // v5 = 128
+		Specification spec = specFty.genSpec();
+		
+		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, avlTree);
+		Statement.printStatements(stmts, System.out);
+		long end = System.currentTimeMillis();
+		System.out.println(">> genTest3: " + (end - start) + "ms\n");
+	}
+	
 }

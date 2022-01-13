@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import heapsyn.algo.DynamicGraphBuilder;
 import heapsyn.algo.HeapTransGraphBuilder;
 import heapsyn.algo.Statement;
 import heapsyn.algo.TestGenerator;
@@ -29,9 +30,10 @@ import static common.Settings.*;
 
 public class TreeMapLauncher {
 	
-	private static final int scope$TreeMap = 1;
+	private static final int scope$TreeMap		= 1;
 	private static final int scopeForJBSE$Entry = 5;
 	private static final int scopeForHeap$Entry = 6;
+	private static final int maxSeqLength		= 10;
 	private static final String hexFilePathAccurate = "HEXsettings/sushi/treemap-accurate.jbse";
 	private static final String hexFilePathPartial  = "HEXsettings/sushi/treemap-partial.jbse";
 	private static final String logFilePath 		= "tmp/sushi/treemap.txt";
@@ -80,11 +82,11 @@ public class TreeMapLauncher {
 		return methods;
 	}
 	
-	private static void buildGraph(Collection<Method> methods, boolean simplify)
+	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+				name -> !name.startsWith("_") && !name.equals("modCount"));
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$TreeMap, scope$TreeMap);
 		gb.setHeapScope(cls$Entry, scopeForHeap$Entry);
@@ -93,17 +95,38 @@ public class TreeMapLauncher {
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
 		testGenerator = new TestGenerator(heaps);
 		long end = System.currentTimeMillis();
-		System.out.println(">> buildGraph: " + (end - start) + "ms\n");
+		System.out.println(">> buildGraph (static): " + (end - start) + "ms\n");
+	}
+	
+	private static void buildGraphDynamic(Collection<Method> methods)
+			throws FileNotFoundException {
+		long start = System.currentTimeMillis();
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
+				name -> !name.startsWith("_") && !name.equals("modCount"));
+		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
+		gb.setHeapScope(cls$TreeMap, scope$TreeMap);
+		gb.setHeapScope(cls$Entry, scopeForHeap$Entry);
+		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
+		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
+		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
+		testGenerator = new TestGenerator(heaps);
+		long end = System.currentTimeMillis();
+		System.out.println(">> buildGraph (dynamic): " + (end - start) + "ms\n");
 	}
 	
 	public static void main(String[] args) throws Exception {
 		final boolean useAccurateSpec = true;
 		final boolean showOnConsole = true;
 		final boolean simplify = true;
+		final boolean useDynamicAlgorithm = true;
 		init(useAccurateSpec);
 		configure(showOnConsole);
 		List<Method> methods = getMethods();
-		buildGraph(methods, simplify);
+		if (useDynamicAlgorithm) {
+			buildGraphDynamic(methods);
+		} else {
+			buildGraphStatic(methods, simplify);
+		}
 		genTest0();
 		genTest4$1();
 		genTest4$2();
@@ -194,29 +217,6 @@ public class TreeMapLauncher {
 		long start = System.currentTimeMillis();
 		SpecFactory specFty = new SpecFactory();
 		ObjectH treemap = specFty.mkRefDecl(cls$TreeMap, "t");
-		ObjectH v0 = specFty.mkRefDecl(Object.class, "v0");
-		specFty.addRefSpec("t", "root", "o1");
-		specFty.addRefSpec("o1", "left", "o2", "right", "o3");
-		specFty.addRefSpec("o2", "left", "o4", "right", "o5", "color", "b2");
-		specFty.addVarSpec("(= b2 false)");  // RED
-		specFty.addRefSpec("o3", "left", "null", "right", "null", "color", "b3");
-		specFty.addVarSpec("(= b3 true)");   // BLACK
-		specFty.addRefSpec("o4", "left", "null", "right", "null");
-		specFty.addRefSpec("o5", "left", "null", "right", "null");
-		specFty.setAccessible("t", "v0");
-		Specification spec = specFty.genSpec();
-		// +50 +30 +70 +80 -80 +10 +40 +20 -20
-		
-		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, treemap, v0);
-		Statement.printStatements(stmts, System.out);
-		long end = System.currentTimeMillis();
-		System.out.println(">> genTest6$1: " + (end - start) + "ms\n");
-	}
-	
-	private static void genTest6$2() {
-		long start = System.currentTimeMillis();
-		SpecFactory specFty = new SpecFactory();
-		ObjectH treemap = specFty.mkRefDecl(cls$TreeMap, "t");
 		specFty.addRefSpec("t", "root", "o1");
 		specFty.addRefSpec("o1", "left", "o2", "right", "o4", "color", "b1");
 		specFty.addVarSpec("(= b1 true)");   // BLACK
@@ -233,7 +233,30 @@ public class TreeMapLauncher {
 		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, treemap);
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
-		System.out.println(">> genTest6$2: " + (end - start) + "ms\n");
+		System.out.println(">> genTest6$1: " + (end - start) + "ms\n");
 	}
 
+	private static void genTest6$2() {
+		long start = System.currentTimeMillis();
+		SpecFactory specFty = new SpecFactory();
+		ObjectH treemap = specFty.mkRefDecl(cls$TreeMap, "t");
+		ObjectH v0 = specFty.mkRefDecl(Object.class, "v0");
+		specFty.addRefSpec("t", "root", "o1");
+		specFty.addRefSpec("o1", "left", "o2", "right", "o3");
+		specFty.addRefSpec("o2", "left", "o4", "right", "o5", "color", "b2");
+		specFty.addVarSpec("(= b2 false)");  // RED
+		specFty.addRefSpec("o3", "left", "null", "right", "null", "color", "b3");
+		specFty.addVarSpec("(= b3 true)");   // BLACK
+		specFty.addRefSpec("o4", "left", "null", "right", "null");
+		specFty.addRefSpec("o5", "left", "null", "right", "null");
+		specFty.setAccessible("t", "v0");
+		Specification spec = specFty.genSpec();
+		// +50 +30 +70 +80 -80 +10 +40 +20 -20
+		
+		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, treemap, v0);
+		Statement.printStatements(stmts, System.out);
+		long end = System.currentTimeMillis();
+		System.out.println(">> genTest6$2: " + (end - start) + "ms\n");
+	}
+	
 }

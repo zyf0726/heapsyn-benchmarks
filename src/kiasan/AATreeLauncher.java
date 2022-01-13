@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import heapsyn.algo.DynamicGraphBuilder;
 import heapsyn.algo.HeapTransGraphBuilder;
 import heapsyn.algo.Statement;
 import heapsyn.algo.TestGenerator;
@@ -30,7 +31,8 @@ import static common.Settings.*;
 public class AATreeLauncher {
 	
 	private static final int scope$AATree	= 1;
-	private static final int scope$AANode	= 4;
+	private static final int scope$AANode	= 5;
+	private static final int maxSeqLength	= 6;
 	private static final String hexFilePath = "HEXsettings/kiasan/aatree.jbse";
 	private static final String logFilePath = "tmp/kiasan/aatree.txt";
 	
@@ -76,7 +78,7 @@ public class AATreeLauncher {
 		return methods;
 	}
 	
-	private static void buildGraph(Collection<Method> methods, boolean simplify)
+	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
@@ -89,18 +91,40 @@ public class AATreeLauncher {
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
 		testGenerator = new TestGenerator(heaps);
 		long end = System.currentTimeMillis();
-		System.out.println(">> buildGraph: " + (end - start) + "ms\n");
+		System.out.println(">> buildGraph (static): " + (end - start) + "ms\n");
+	}
+	
+	private static void buildGraphDynamic(Collection<Method> methods)
+			throws FileNotFoundException {
+		long start = System.currentTimeMillis();
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
+				name -> !name.startsWith("_"));
+		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
+		gb.setHeapScope(cls$AATree, scope$AATree);
+		gb.setHeapScope(cls$AANode, scope$AANode);
+		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
+		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
+		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
+		testGenerator = new TestGenerator(heaps);
+		long end = System.currentTimeMillis();
+		System.out.println(">> buildGraph (dynamic): " + (end - start) + "ms\n");
 	}
 	
 	public static void main(String[] args) throws Exception {
 		final boolean showOnConsole = true;
 		final boolean simplify = false;
+		final boolean useDynamicAlgorithm = true;
 		init();
 		configure(showOnConsole);
 		List<Method> methods = getMethods();
-		buildGraph(methods, simplify);
+		if (useDynamicAlgorithm) {
+			buildGraphDynamic(methods);
+		} else {
+			buildGraphStatic(methods, simplify);
+		}
 		genTest1();
 		genTest2();
+		genTest3();
 	}
 	
 	private static void genTest1() {
@@ -145,6 +169,40 @@ public class AATreeLauncher {
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
 		System.out.println(">> genTest2: " + (end - start) + "ms\n");
+	}
+	
+	private static void genTest3() {
+		long start = System.currentTimeMillis();
+		SpecFactory specFty = new SpecFactory();
+		ObjectH aatree = specFty.mkRefDecl(cls$AATree, "t");
+		ObjectH l0 = specFty.mkVarDecl(SMTSort.INT, "l0");
+		ObjectH l1 = specFty.mkVarDecl(SMTSort.INT, "l1");
+		ObjectH l2 = specFty.mkVarDecl(SMTSort.INT, "l2");
+		ObjectH l3 = specFty.mkVarDecl(SMTSort.INT, "l3");
+		ObjectH l4 = specFty.mkVarDecl(SMTSort.INT, "l4");
+		ObjectH l5 = specFty.mkVarDecl(SMTSort.INT, "l5");
+		ObjectH v0 = specFty.mkVarDecl(SMTSort.INT, "v0");
+		ObjectH v1 = specFty.mkVarDecl(SMTSort.INT, "v1");
+		ObjectH v2 = specFty.mkVarDecl(SMTSort.INT, "v2");
+		ObjectH v3 = specFty.mkVarDecl(SMTSort.INT, "v3");
+		ObjectH v4 = specFty.mkVarDecl(SMTSort.INT, "v4");
+		ObjectH v5 = specFty.mkVarDecl(SMTSort.INT, "v5");
+		specFty.addRefSpec("t", "root", "o0");
+		specFty.addRefSpec("o0", "left", "o1", "right", "o2", "level", "l0", "element", "v0");
+		specFty.addRefSpec("o1", "right", "o3", "level", "l1", "element", "v1");
+		specFty.addRefSpec("o2", "left", "o4", "right", "o5", "level", "l2", "element", "v2");
+		specFty.addRefSpec("o3", "level", "l3", "element", "v3");
+		specFty.addRefSpec("o4", "level", "l4", "element", "v4");
+		specFty.addRefSpec("o5", "level", "l5", "element", "v5");
+		specFty.addVarSpec("(>= (+ v2 v5) 16)");
+		specFty.setAccessible("t");
+		Specification spec = specFty.genSpec();
+		
+		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, aatree,
+				v0, v1, v2, v3, v4, v5, l0, l1, l2, l3, l4, l5);
+		Statement.printStatements(stmts, System.out);
+		long end = System.currentTimeMillis();
+		System.out.println(">> genTest3: " + (end - start) + "ms\n");
 	}
 	
 }
