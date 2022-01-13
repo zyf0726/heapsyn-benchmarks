@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import heapsyn.algo.DynamicGraphBuilder;
 import heapsyn.algo.HeapTransGraphBuilder;
 import heapsyn.algo.Statement;
 import heapsyn.algo.TestGenerator;
@@ -31,6 +32,7 @@ public class LeftistLauncher {
 	
 	private static final int scope$Heap		= 2;
 	private static final int scope$Node		= 6;
+	private static final int maxSeqLength	= 8;
 	private static final String hexFilePath	= "HEXsettings/kiasan/leftist.jbse";
 	private static final String logFilePath = "tmp/kiasan/leftist.txt";
 	
@@ -76,7 +78,7 @@ public class LeftistLauncher {
 		return methods;
 	}
 	
-	private static void buildGraph(Collection<Method> methods, boolean simplify)
+	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
@@ -89,16 +91,37 @@ public class LeftistLauncher {
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
 		testGenerator = new TestGenerator(heaps);
 		long end = System.currentTimeMillis();
-		System.out.println(">> buildGraph: " + (end - start) + "ms\n");
+		System.out.println(">> buildGraph (static): " + (end - start) + "ms\n");
+	}
+	
+	private static void buildGraphDynamic(Collection<Method> methods)
+			throws FileNotFoundException {
+		long start = System.currentTimeMillis();
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
+				name -> !name.startsWith("_"));
+		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
+		gb.setHeapScope(cls$Heap, scope$Heap);
+		gb.setHeapScope(cls$Node, scope$Node);
+		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
+		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
+		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
+		testGenerator = new TestGenerator(heaps);
+		long end = System.currentTimeMillis();
+		System.out.println(">> buildGraph (dynamic): " + (end - start) + "ms\n");
 	}
 	
 	public static void main(String[] args) throws Exception {
 		final boolean showOnConsole = true;
 		final boolean simplify = true;
+		final boolean useDynamicAlgorithm = true;
 		init();
 		configure(showOnConsole);
 		List<Method> methods = getMethods();
-		buildGraph(methods, simplify);
+		if (useDynamicAlgorithm) {
+			buildGraphDynamic(methods);
+		} else {
+			buildGraphStatic(methods, simplify);
+		}
 		genTest0();
 		genTest6();
 		genTest3$3();
