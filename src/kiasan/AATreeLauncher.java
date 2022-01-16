@@ -180,26 +180,24 @@ public class AATreeLauncher {
 		ObjectH l2 = specFty.mkVarDecl(SMTSort.INT, "l2");
 		ObjectH l3 = specFty.mkVarDecl(SMTSort.INT, "l3");
 		ObjectH l4 = specFty.mkVarDecl(SMTSort.INT, "l4");
-		ObjectH l5 = specFty.mkVarDecl(SMTSort.INT, "l5");
 		ObjectH v0 = specFty.mkVarDecl(SMTSort.INT, "v0");
 		ObjectH v1 = specFty.mkVarDecl(SMTSort.INT, "v1");
 		ObjectH v2 = specFty.mkVarDecl(SMTSort.INT, "v2");
 		ObjectH v3 = specFty.mkVarDecl(SMTSort.INT, "v3");
 		ObjectH v4 = specFty.mkVarDecl(SMTSort.INT, "v4");
-		ObjectH v5 = specFty.mkVarDecl(SMTSort.INT, "v5");
 		specFty.addRefSpec("t", "root", "o0");
 		specFty.addRefSpec("o0", "left", "o1", "right", "o2", "level", "l0", "element", "v0");
-		specFty.addRefSpec("o1", "right", "o3", "level", "l1", "element", "v1");
-		specFty.addRefSpec("o2", "left", "o4", "right", "o5", "level", "l2", "element", "v2");
+		specFty.addRefSpec("o1", "level", "l1", "element", "v1");
+		specFty.addRefSpec("o2", "left", "o3", "right", "o4", "level", "l2", "element", "v2");
 		specFty.addRefSpec("o3", "level", "l3", "element", "v3");
 		specFty.addRefSpec("o4", "level", "l4", "element", "v4");
-		specFty.addRefSpec("o5", "level", "l5", "element", "v5");
-		specFty.addVarSpec("(>= (+ v2 v5) 16)");
+		specFty.addVarSpec("(>= (+ v0 v3) 16)");
+		specFty.addVarSpec("(< (+ v1 v4 v2) -16)");
 		specFty.setAccessible("t");
 		Specification spec = specFty.genSpec();
 		
 		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, aatree,
-				v0, v1, v2, v3, v4, v5, l0, l1, l2, l3, l4, l5);
+				v0, v1, v2, v3, v4, l0, l1, l2, l3, l4);
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
 		System.out.println(">> genTest3: " + (end - start) + "ms\n");

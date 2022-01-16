@@ -31,7 +31,7 @@ import static common.Settings.*;
 public class NcllLauncher {
 
 	private static final int scope$List			= 1;
-	private static final int scopeForJBSE$Node	= 4;
+	private static final int scopeForJBSE$Node	= 5;
 	private static final int scopeForHeap$Node	= 8;
 	private static final int maxSeqLength		= 14;
 	private static final String hexFilePath 	= "HEXsettings/sushi/ncll-accurate.jbse";

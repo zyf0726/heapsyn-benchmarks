@@ -121,12 +121,12 @@ public class AvlLauncher {
 		} else {
 			buildGraphStatic(methods, simplify);
 		}
-		genTest1();
-		genTest2();
-		genTest3();
+		genTest4$1();
+		genTest4$2();
+		genTest6$1();
 	}
 	
-	private static void genTest1() {
+	private static void genTest4$1() {
 		long start = System.currentTimeMillis();
 		SpecFactory specFty = new SpecFactory();
 		ObjectH avlTree = specFty.mkRefDecl(cls$AvlTree, "t");
@@ -141,10 +141,10 @@ public class AvlLauncher {
 		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, avlTree);
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
-		System.out.println(">> genTest1: " + (end - start) + "ms\n");
+		System.out.println(">> genTest4$1: " + (end - start) + "ms\n");
 	}
 	
-	private static void genTest2() {
+	private static void genTest4$2() {
 		long start = System.currentTimeMillis();
 		SpecFactory specFty = new SpecFactory();
 		ObjectH avlTree = specFty.mkRefDecl(cls$AvlTree, "t");
@@ -159,10 +159,10 @@ public class AvlLauncher {
 		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, avlTree);
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
-		System.out.println(">> genTest2: " + (end - start) + "ms\n");
+		System.out.println(">> genTest4$2: " + (end - start) + "ms\n");
 	}
 
-	private static void genTest3() {
+	private static void genTest6$1() {
 		long start = System.currentTimeMillis();
 		SpecFactory specFty = new SpecFactory();
 		ObjectH avlTree = specFty.mkRefDecl(cls$AvlTree, "t");
@@ -185,7 +185,7 @@ public class AvlLauncher {
 		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, avlTree);
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
-		System.out.println(">> genTest3: " + (end - start) + "ms\n");
+		System.out.println(">> genTest6$1: " + (end - start) + "ms\n");
 	}
 	
 }

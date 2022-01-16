@@ -31,9 +31,9 @@ import static common.Settings.*;
 public class TreeMapLauncher {
 	
 	private static final int scope$TreeMap		= 1;
-	private static final int scopeForJBSE$Entry = 4;
-	private static final int scopeForHeap$Entry = 5;
-	private static final int maxSeqLength		= 8;
+	private static final int scopeForJBSE$Entry = 5;
+	private static final int scopeForHeap$Entry = 6;
+	private static final int maxSeqLength		= 10;
 	private static final String hexFilePath		= "HEXsettings/kiasan/treemap.jbse";
 	private static final String logFilePath 	= "tmp/kiasan/treemap.txt";
 	
@@ -127,6 +127,8 @@ public class TreeMapLauncher {
 		genTest4$1();
 		genTest4$2();
 		genTest5$1();
+		genTest6$1();
+		genTest6$2();
 	}
 	
 	private static void genTest0() {
@@ -205,6 +207,52 @@ public class TreeMapLauncher {
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
 		System.out.println(">> genTest5$1: " + (end - start) + "ms\n");
+	}
+	
+	private static void genTest6$1() {
+		long start = System.currentTimeMillis();
+		SpecFactory specFty = new SpecFactory();
+		ObjectH treemap = specFty.mkRefDecl(cls$TreeMap, "t");
+		specFty.addRefSpec("t", "root", "o1");
+		specFty.addRefSpec("o1", "left", "o2", "right", "o4", "color", "b1");
+		specFty.addVarSpec("(= b1 true)");   // BLACK
+		specFty.addRefSpec("o2", "left", "o3", "color", "b2");
+		specFty.addVarSpec("(= b2 true)");   // BLACK
+		specFty.addRefSpec("o3", "color", "b3");
+		specFty.addVarSpec("(= b3 false)");  // RED
+		specFty.addRefSpec("o4", "color", "b4");
+		specFty.addVarSpec("(= b4 false)");  // RED
+		specFty.setAccessible("t");
+		Specification spec = specFty.genSpec();
+		// +50 +30 +70 +80 +60 +90 -90 +20
+		
+		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, treemap);
+		Statement.printStatements(stmts, System.out);
+		long end = System.currentTimeMillis();
+		System.out.println(">> genTest6$1: " + (end - start) + "ms\n");
+	}
+
+	private static void genTest6$2() {
+		long start = System.currentTimeMillis();
+		SpecFactory specFty = new SpecFactory();
+		ObjectH treemap = specFty.mkRefDecl(cls$TreeMap, "t");
+		ObjectH v0 = specFty.mkRefDecl(Object.class, "v0");
+		specFty.addRefSpec("t", "root", "o1");
+		specFty.addRefSpec("o1", "left", "o2", "right", "o3");
+		specFty.addRefSpec("o2", "left", "o4", "right", "o5", "color", "b2");
+		specFty.addVarSpec("(= b2 false)");  // RED
+		specFty.addRefSpec("o3", "left", "null", "right", "null", "color", "b3");
+		specFty.addVarSpec("(= b3 true)");   // BLACK
+		specFty.addRefSpec("o4", "left", "null", "right", "null");
+		specFty.addRefSpec("o5", "left", "null", "right", "null");
+		specFty.setAccessible("t", "v0");
+		Specification spec = specFty.genSpec();
+		// +50 +30 +70 +80 -80 +10 +40 +20 -20
+		
+		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, treemap, v0);
+		Statement.printStatements(stmts, System.out);
+		long end = System.currentTimeMillis();
+		System.out.println(">> genTest6$2: " + (end - start) + "ms\n");
 	}
 
 }
