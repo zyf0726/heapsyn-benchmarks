@@ -31,8 +31,8 @@ import static common.Settings.*;
 public class LeftistLauncher {
 	
 	private static final int scope$Heap		= 2;
-	private static final int scope$Node		= 6;
-	private static final int maxSeqLength	= 8;
+	private static final int scope$Node		= 7;
+	private static final int maxSeqLength	= 9;
 	private static final String hexFilePath	= "HEXsettings/kiasan/leftist.jbse";
 	private static final String logFilePath = "tmp/kiasan/leftist.txt";
 	
@@ -125,6 +125,7 @@ public class LeftistLauncher {
 		genTest0();
 		genTest6();
 		genTest3$3();
+		genTest5$2();
 	}
 	
 	private static void genTest0() {
@@ -185,6 +186,35 @@ public class LeftistLauncher {
 		Statement.printStatements(stmts, System.out);
 		long end = System.currentTimeMillis();
 		System.out.println(">> genTest3$3: " + (end - start) + "ms\n");
+	}
+	
+	private static void genTest5$2() {
+		long start = System.currentTimeMillis();
+		SpecFactory specFty = new SpecFactory();
+		ObjectH h1 = specFty.mkRefDecl(cls$Heap, "h1");
+		ObjectH h2 = specFty.mkRefDecl(cls$Heap, "h2");
+		ObjectH v2 = specFty.mkVarDecl(SMTSort.INT, "v2");
+		ObjectH v3 = specFty.mkVarDecl(SMTSort.INT, "v3");
+		ObjectH v5 = specFty.mkVarDecl(SMTSort.INT, "v5");
+		specFty.addRefSpec("h1", "root", "o0");
+		specFty.addRefSpec("o0", "left", "o1", "right", "null");
+		specFty.addRefSpec("o1", "left", "o2", "right", "o3");
+		specFty.addRefSpec("o2", "left", "o4", "right", "null", "element", "v2");
+		specFty.addRefSpec("o3", "left", "null", "right", "null", "element", "v3");
+		specFty.addRefSpec("o4", "left", "null", "right", "null");
+		specFty.addRefSpec("h2", "root", "o5");
+		specFty.addRefSpec("o5", "left", "o6", "right", "null", "element", "v5");
+		specFty.addRefSpec("o6", "right", "null");
+		specFty.addVarSpec("(< 2022 (+ v5 v2))");
+		specFty.addVarSpec("(> v3 v2)");
+		specFty.addVarSpec("(< v2 -100)");
+		specFty.setAccessible("h1", "h2");
+		Specification spec = specFty.genSpec();
+		
+		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, h1, h2, v2, v3, v5);
+		Statement.printStatements(stmts, System.out);
+		long end = System.currentTimeMillis();
+		System.out.println(">> genTest5$2: " + (end - start) + "ms\n");
 	}
 
 }
