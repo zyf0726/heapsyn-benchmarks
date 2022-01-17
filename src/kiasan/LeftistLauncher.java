@@ -30,9 +30,10 @@ import static common.Settings.*;
 
 public class LeftistLauncher {
 	
-	private static final int scope$Heap		= 2;
-	private static final int scope$Node		= 7;
-	private static final int maxSeqLength	= 9;
+	private static final int scope$Heap				= 2;
+	private static final int scopeForJBSE$Node		= 5;
+	private static final int scopeForHeap$Node		= 7;
+	private static final int maxSeqLength			= 9;
 	private static final String hexFilePath	= "HEXsettings/kiasan/leftist.jbse";
 	private static final String logFilePath = "tmp/kiasan/leftist.txt";
 	
@@ -55,7 +56,7 @@ public class LeftistLauncher {
 		parms.setShowOnConsole(showOnConsole);
 		parms.setSettingsPath(hexFilePath);
 		parms.setHeapScope(cls$Heap, scope$Heap);
-		parms.setHeapScope(cls$Node, scope$Node);
+		parms.setHeapScope(cls$Node, scopeForJBSE$Node);
 	}
 	
 	private static List<Method> getMethods() throws NoSuchMethodException {
@@ -85,7 +86,7 @@ public class LeftistLauncher {
 				name -> !name.startsWith("_"));
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$Heap, scope$Heap);
-		gb.setHeapScope(cls$Node, scope$Node);
+		gb.setHeapScope(cls$Node, scopeForHeap$Node);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, simplify);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
@@ -101,7 +102,7 @@ public class LeftistLauncher {
 				name -> !name.startsWith("_"));
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$Heap, scope$Heap);
-		gb.setHeapScope(cls$Node, scope$Node);
+		gb.setHeapScope(cls$Node, scopeForHeap$Node);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
