@@ -85,6 +85,7 @@ public class TreeMapLauncher {
 	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
+		// WARNNING: 'modCount' is never in a path condition
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
 				name -> !name.startsWith("_") && !name.equals("modCount"));
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
@@ -101,6 +102,7 @@ public class TreeMapLauncher {
 	private static void buildGraphDynamic(Collection<Method> methods)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
+		// WARNNING: 'modCount' is never in a path condition
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
 				name -> !name.startsWith("_") && !name.equals("modCount"));
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
