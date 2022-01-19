@@ -1,28 +1,28 @@
 resolve begin
 
 -- for all the entries e, e.element is not an entry
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:next|.sir/DoubleLinkedList$Entry:previous)*.sir/DoubleLinkedList$Entry:element instanceof java/lang/Object aliases target {ROOT}:(?!{°}*sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:next|.sir/DoubleLinkedList$Entry:previous)*{EOL}){°}*;
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next|.sir/dll/DoubleLinkedList$Entry:previous)*.sir/dll/DoubleLinkedList$Entry:element instanceof java/lang/Object aliases target {ROOT}:(?!{°}*sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next|.sir/dll/DoubleLinkedList$Entry:previous)*{EOL}){°}*;
 
 -- list header must exist and be distinct from other nodes
-{R_ANY}.sir/DoubleLinkedList:header instanceof sir/DoubleLinkedList$Entry not null;
-{R_ANY}.sir/DoubleLinkedList:header instanceof sir/DoubleLinkedList$Entry aliases nothing;
+{R_ANY}.sir/dll/DoubleLinkedList:header instanceof sir/dll/DoubleLinkedList$Entry not null;
+{R_ANY}.sir/dll/DoubleLinkedList:header instanceof sir/dll/DoubleLinkedList$Entry aliases nothing;
 
 -- list header stores no data
-{R_ANY}.sir/DoubleLinkedList:header.sir/DoubleLinkedList$Entry:element instanceof java/lang/Object expands to nothing;
-{R_ANY}.sir/DoubleLinkedList:header.sir/DoubleLinkedList$Entry:element instanceof java/lang/Object aliases nothing;
+{R_ANY}.sir/dll/DoubleLinkedList:header.sir/dll/DoubleLinkedList$Entry:element instanceof java/lang/Object expands to nothing;
+{R_ANY}.sir/dll/DoubleLinkedList:header.sir/dll/DoubleLinkedList$Entry:element instanceof java/lang/Object aliases nothing;
 
 -- all list entries must have a next and a previous
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:next|.sir/DoubleLinkedList$Entry:previous)* instanceof sir/DoubleLinkedList$Entry not null;
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next|.sir/dll/DoubleLinkedList$Entry:previous)* instanceof sir/dll/DoubleLinkedList$Entry not null;
 
 -- the rightmost entry can be resolved by alias to the leftmost one and vice versa
 -- (note that these rules include the degenerate empty list case header.next == header.prev == header);
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:next)* instanceof sir/DoubleLinkedList$Entry aliases target {MAX}{$R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:previous)*;
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:previous)* instanceof sir/DoubleLinkedList$Entry aliases target {MAX}{$R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:next)*;
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next)* instanceof sir/dll/DoubleLinkedList$Entry aliases target {MAX}{$R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:previous)*;
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:previous)* instanceof sir/dll/DoubleLinkedList$Entry aliases target {MAX}{$R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next)*;
 
 -- for all the entries e it must be e.next.previous == e and e.previous.next == e
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:next)+.sir/DoubleLinkedList$Entry:previous instanceof sir/DoubleLinkedList$Entry expands to nothing;
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:next)+.sir/DoubleLinkedList$Entry:previous instanceof sir/DoubleLinkedList$Entry aliases target {$REF}.{UP}.{UP};
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:previous)+.sir/DoubleLinkedList$Entry:next instanceof sir/DoubleLinkedList$Entry expands to nothing;
-{R_ANY}.sir/DoubleLinkedList:header(.sir/DoubleLinkedList$Entry:previous)+.sir/DoubleLinkedList$Entry:next instanceof sir/DoubleLinkedList$Entry aliases target {$REF}.{UP}.{UP};
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next)+.sir/dll/DoubleLinkedList$Entry:previous instanceof sir/dll/DoubleLinkedList$Entry expands to nothing;
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next)+.sir/dll/DoubleLinkedList$Entry:previous instanceof sir/dll/DoubleLinkedList$Entry aliases target {$REF}.{UP}.{UP};
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:previous)+.sir/dll/DoubleLinkedList$Entry:next instanceof sir/dll/DoubleLinkedList$Entry expands to nothing;
+{R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:previous)+.sir/dll/DoubleLinkedList$Entry:next instanceof sir/dll/DoubleLinkedList$Entry aliases target {$REF}.{UP}.{UP};
 
 resolve end
