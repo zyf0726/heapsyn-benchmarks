@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import heapsyn.algo.DynamicGraphBuilder;
@@ -30,12 +31,14 @@ import static common.Settings.*;
 
 public class AATreeLauncher {
 	
-	private static final int scope$AATree			= 1;
-	private static final int scopeForJBSE$AANode	= 4;
-	private static final int scopeForHeap$AANode	= 5;
-	private static final int maxSeqLength			= 6;
+	private static final int scope$AATree	= 1;
+	private static final int scope$AANode	= 5;
+	private static final int maxSeqLength	= 7;
 	private static final String hexFilePath = "HEXsettings/kiasan/aatree.jbse";
 	private static final String logFilePath = "tmp/kiasan/aatree.txt";
+	
+	private static final Predicate<String> fieldFilter = (name ->
+			!name.equals("deletedNode") && !name.equals("lastNode"));
 	
 	private static Class<?> cls$AATree;
 	private static Class<?> cls$AANode;
@@ -56,7 +59,7 @@ public class AATreeLauncher {
 		parms.setShowOnConsole(showOnConsole);
 		parms.setSettingsPath(hexFilePath);
 		parms.setHeapScope(cls$AATree, scope$AATree);
-		parms.setHeapScope(cls$AANode, scopeForJBSE$AANode);
+		parms.setHeapScope(cls$AANode, scope$AANode);
 	}
 	
 	private static List<Method> getMethods() throws NoSuchMethodException {
@@ -82,11 +85,10 @@ public class AATreeLauncher {
 	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AATree, scope$AATree);
-		gb.setHeapScope(cls$AANode, scopeForHeap$AANode);
+		gb.setHeapScope(cls$AANode, scope$AANode);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, simplify);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
@@ -98,11 +100,10 @@ public class AATreeLauncher {
 	private static void buildGraphDynamic(Collection<Method> methods)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AATree, scope$AATree);
-		gb.setHeapScope(cls$AANode, scopeForHeap$AANode);
+		gb.setHeapScope(cls$AANode, scope$AANode);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));

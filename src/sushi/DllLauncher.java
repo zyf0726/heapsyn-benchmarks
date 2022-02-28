@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import heapsyn.algo.DynamicGraphBuilder;
@@ -31,13 +32,17 @@ import static common.Settings.*;
 public class DllLauncher {
 
 	private static final int scope$List		= 1;
-	private static final int scope$Entry	= 4;
+	private static final int scope$Entry	= 5;
 	private static final int scope$Iter		= 1;
 	private static final int scope$DesIter	= 1;
-	private static final int maxSeqLength	= 5;
+	private static final int maxSeqLength	= 6;
 	private static final String hexFilePath	= "HEXsettings/sushi/dll-accurate.jbse";
 	private static final String logFilePath	= "tmp/sushi/dll.txt";
 	
+	private static final Predicate<String> fieldFilter = (name ->
+			(!name.startsWith("_") || name.equals("_owner"))
+			&& !name.equals("modCount") && !name.equals("expectedModCount"));
+
 	private static Class<?> cls$List, cls$Entry;
 	private static Class<?> cls$Iter, cls$DesIter;
 	
@@ -87,8 +92,7 @@ public class DllLauncher {
 	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$List, scope$List);
 		gb.setHeapScope(cls$Entry, scope$Entry);
@@ -105,8 +109,7 @@ public class DllLauncher {
 	private static void buildGraphDynamic(Collection<Method> methods)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$List, scope$List);
 		gb.setHeapScope(cls$Entry, scope$Entry);

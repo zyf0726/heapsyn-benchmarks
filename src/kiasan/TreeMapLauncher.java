@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import heapsyn.algo.DynamicGraphBuilder;
@@ -36,6 +37,8 @@ public class TreeMapLauncher {
 	private static final int maxSeqLength		= 10;
 	private static final String hexFilePath		= "HEXsettings/kiasan/treemap.jbse";
 	private static final String logFilePath 	= "tmp/kiasan/treemap.txt";
+	
+	private static Predicate<String> fieldFilter = (name -> !name.equals("modCount"));
 	
 	private static Class<?> cls$TreeMap;
 	private static Class<?> cls$Entry;
@@ -82,9 +85,7 @@ public class TreeMapLauncher {
 	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		// WARNNING: 'modCount' is never in a path condition
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_") && !name.equals("modCount"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$TreeMap, scope$TreeMap);
 		gb.setHeapScope(cls$Entry, scopeForHeap$Entry);
@@ -99,9 +100,7 @@ public class TreeMapLauncher {
 	private static void buildGraphDynamic(Collection<Method> methods)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		// WARNNING: 'modCount' is never in a path condition
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_") && !name.equals("modCount"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$TreeMap, scope$TreeMap);
 		gb.setHeapScope(cls$Entry, scopeForHeap$Entry);

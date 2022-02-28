@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import heapsyn.algo.DynamicGraphBuilder;
@@ -36,6 +37,10 @@ public class NcllLauncher {
 	private static final int maxSeqLength		= 14;
 	private static final String hexFilePath 	= "HEXsettings/sushi/ncll-accurate.jbse";
 	private static final String logFilePath 	= "tmp/sushi/ncll.txt";
+	
+	private static final Predicate<String> fieldFilter = (name ->
+			(!name.startsWith("_") || name.equals("_owner"))
+			&& !name.equals("modCount"));
 	
 	private static Class<?> cls$List;
 	private static Class<?> cls$Node;
@@ -83,8 +88,7 @@ public class NcllLauncher {
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
 		// WARNNING: 'modCount' is never in a path condition
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_") && !name.equals("modCount"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$List, scope$List);
 		gb.setHeapScope(cls$Node, scopeForHeap$Node);
@@ -100,8 +104,7 @@ public class NcllLauncher {
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
 		// WARNNING: 'modCount' is never in a path condition
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_") && !name.equals("modCount"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$List, scope$List);
 		gb.setHeapScope(cls$Node, scopeForHeap$Node);

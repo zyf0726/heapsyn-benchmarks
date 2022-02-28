@@ -80,8 +80,7 @@ public class StackLiLauncher {
 	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE();
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$Stack, scope$Stack);
 		gb.setHeapScope(cls$Node, scope$Node);
@@ -96,8 +95,7 @@ public class StackLiLauncher {
 	private static void buildGraphDynamic(Collection<Method> methods)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE();
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$Stack, scope$Stack);
 		gb.setHeapScope(cls$Node, scope$Node);

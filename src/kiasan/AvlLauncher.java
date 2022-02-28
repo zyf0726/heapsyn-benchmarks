@@ -80,8 +80,7 @@ public class AvlLauncher {
 	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE();
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AvlTree, scope$AvlTree);
 		gb.setHeapScope(cls$AvlNode, scope$AvlNode);
@@ -96,8 +95,7 @@ public class AvlLauncher {
 	private static void buildGraphDynamic(Collection<Method> methods)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE();
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AvlTree, scope$AvlTree);
 		gb.setHeapScope(cls$AvlNode, scope$AvlNode);

@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import heapsyn.algo.DynamicGraphBuilder;
@@ -35,6 +36,8 @@ public class AvlLauncher {
 	private static final String hexFilePathAccurate = "HEXsettings/sushi/avltree-accurate.jbse";
 	private static final String hexFilePathPartial  = "HEXsettings/sushi/avltree-partial.jbse";
 	private static final String logFilePath 		= "tmp/sushi/avl.txt";
+	
+	private static final Predicate<String> fieldFilter = (name -> !name.startsWith("_"));
 	
 	private static Class<?> cls$AvlTree;
 	private static Class<?> cls$AvlNode;
@@ -83,8 +86,7 @@ public class AvlLauncher {
 	private static void buildGraphStatic(Collection<Method> methods, boolean simplify)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AvlTree, scope$AvlTree);
 		gb.setHeapScope(cls$AvlNode, scope$AvlNode);
@@ -99,8 +101,7 @@ public class AvlLauncher {
 	private static void buildGraphDynamic(Collection<Method> methods)
 			throws FileNotFoundException {
 		long start = System.currentTimeMillis();
-		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(
-				name -> !name.startsWith("_"));
+		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AvlTree, scope$AvlTree);
 		gb.setHeapScope(cls$AvlNode, scope$AvlNode);
