@@ -30,10 +30,10 @@ import static common.Settings.*;
 
 public class LeftistLauncher {
 	
-	private static final int scope$Heap				= 2;
-	private static final int scopeForJBSE$Node		= 5;
-	private static final int scopeForHeap$Node		= 7;
-	private static final int maxSeqLength			= 9;
+	private static final int scope$Heap			= 2;
+	private static final int scopeForJBSE$Node	= 5;
+	private static final int scopeForHeap$Node	= 7;
+	private static final int maxSeqLength		= 10;
 	private static final String hexFilePath	= "HEXsettings/kiasan/leftist.jbse";
 	private static final String logFilePath = "tmp/kiasan/leftist.txt";
 	

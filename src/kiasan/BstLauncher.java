@@ -30,9 +30,10 @@ import static common.Settings.*;
 
 public class BstLauncher {
 	
-	private static final int scope$BinTree	= 1;
-	private static final int scope$BinNode	= 5;
-	private static final int maxSeqLength	= 7;
+	private static final int scope$BinTree			= 1;
+	private static final int scopeForJBSE$BinNode	= 5;
+	private static final int scopeForHeap$BinNode	= 6;
+	private static final int maxSeqLength			= 10;
 	private static final String hexFilePath	= "HEXsettings/kiasan/bst.jbse";
 	private static final String logFilePath = "tmp/kiasan/bst.txt";
 	
@@ -55,7 +56,7 @@ public class BstLauncher {
 		parms.setShowOnConsole(showOnConsole);
 		parms.setSettingsPath(hexFilePath);
 		parms.setHeapScope(cls$BinTree, scope$BinTree);
-		parms.setHeapScope(cls$BinNode, scope$BinNode);
+		parms.setHeapScope(cls$BinNode, scopeForJBSE$BinNode);
 	}
 	
 	private static List<Method> getMethods() throws NoSuchMethodException {
@@ -84,7 +85,7 @@ public class BstLauncher {
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE();
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$BinTree, scope$BinTree);
-		gb.setHeapScope(cls$BinNode, scope$BinNode);
+		gb.setHeapScope(cls$BinNode, scopeForHeap$BinNode);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, simplify);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
@@ -99,7 +100,7 @@ public class BstLauncher {
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE();
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$BinTree, scope$BinTree);
-		gb.setHeapScope(cls$BinNode, scope$BinNode);
+		gb.setHeapScope(cls$BinNode, scopeForHeap$BinNode);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));

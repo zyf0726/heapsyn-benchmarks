@@ -31,7 +31,7 @@ public class AvlLauncher {
 	
 	private static final int scope$AvlTree	= 1;
 	private static final int scope$AvlNode	= 6;
-	private static final int maxSeqLength	= 7;
+	private static final int maxSeqLength	= 10;
 	private static final String hexFilePath	= "HEXsettings/kiasan/avltree.jbse";
 	private static final String logFilePath = "tmp/kiasan/avl.txt";
 	

@@ -31,9 +31,10 @@ import static common.Settings.*;
 
 public class AATreeLauncher {
 	
-	private static final int scope$AATree	= 1;
-	private static final int scope$AANode	= 5;
-	private static final int maxSeqLength	= 7;
+	private static final int scope$AATree			= 1;
+	private static final int scopeForJBSE$AANode	= 5;
+	private static final int scopeForHeap$AANode	= 6;
+	private static final int maxSeqLength			= 10;
 	private static final String hexFilePath = "HEXsettings/kiasan/aatree.jbse";
 	private static final String logFilePath = "tmp/kiasan/aatree.txt";
 	
@@ -59,7 +60,7 @@ public class AATreeLauncher {
 		parms.setShowOnConsole(showOnConsole);
 		parms.setSettingsPath(hexFilePath);
 		parms.setHeapScope(cls$AATree, scope$AATree);
-		parms.setHeapScope(cls$AANode, scope$AANode);
+		parms.setHeapScope(cls$AANode, scopeForJBSE$AANode);
 	}
 	
 	private static List<Method> getMethods() throws NoSuchMethodException {
@@ -88,7 +89,7 @@ public class AATreeLauncher {
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AATree, scope$AATree);
-		gb.setHeapScope(cls$AANode, scope$AANode);
+		gb.setHeapScope(cls$AANode, scopeForHeap$AANode);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, simplify);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
@@ -103,7 +104,7 @@ public class AATreeLauncher {
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
 		DynamicGraphBuilder gb = new DynamicGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$AATree, scope$AATree);
-		gb.setHeapScope(cls$AANode, scope$AANode);
+		gb.setHeapScope(cls$AANode, scopeForHeap$AANode);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
 		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
