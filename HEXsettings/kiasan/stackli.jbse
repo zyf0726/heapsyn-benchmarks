@@ -5,9 +5,8 @@ resolve begin
 -- acyclic
 {R_ANY}.kiasan/stack/StackLi:topOfStack(.kiasan/stack/ListNode:next)* instanceof kiasan/stack/ListNode aliases nothing;
 
--- parameter x and field ListNode.element are both distinct objects or null, or alias of each other
+-- parameter x can only be alias of field ListNode.element
 {ROOT}:x instanceof java/lang/Object aliases target {ROOT}:this.kiasan/stack/StackLi:topOfStack(.kiasan/stack/ListNode:next)*.kiasan/stack/ListNode:element;
-{ROOT}:this.kiasan/stack/StackLi:topOfStack(.kiasan/stack/ListNode:next)*.kiasan/stack/ListNode:element instanceof java/lang/Object aliases target {ROOT}:x;
 
 
 resolve end

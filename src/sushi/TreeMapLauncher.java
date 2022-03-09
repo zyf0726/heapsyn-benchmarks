@@ -245,13 +245,13 @@ public class TreeMapLauncher {
 		ObjectH treemap = specFty.mkRefDecl(cls$TreeMap, "t");
 		ObjectH v0 = specFty.mkRefDecl(Object.class, "v0");
 		specFty.addRefSpec("t", "root", "o1");
-		specFty.addRefSpec("o1", "left", "o2", "right", "o3");
-		specFty.addRefSpec("o2", "left", "o4", "right", "o5", "color", "b2");
+		specFty.addRefSpec("o1", "left", "o2", "right", "o3", "value", "v");
+		specFty.addRefSpec("o2", "left", "o4", "right", "o5", "color", "b2", "value", "v");
 		specFty.addVarSpec("(= b2 false)");  // RED
-		specFty.addRefSpec("o3", "left", "null", "right", "null", "color", "b3");
+		specFty.addRefSpec("o3", "left", "null", "right", "null", "color", "b3", "value", "v");
 		specFty.addVarSpec("(= b3 true)");   // BLACK
-		specFty.addRefSpec("o4", "left", "null", "right", "null");
-		specFty.addRefSpec("o5", "left", "null", "right", "null");
+		specFty.addRefSpec("o4", "left", "null", "right", "null", "value", "v");
+		specFty.addRefSpec("o5", "left", "null", "right", "null", "value", "v");
 		specFty.setAccessible("t", "v0");
 		Specification spec = specFty.genSpec();
 		// +50 +30 +70 +80 -80 +10 +40 +20 -20
