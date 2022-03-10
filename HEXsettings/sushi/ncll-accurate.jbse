@@ -1,6 +1,8 @@
 resolve begin
 
--- parameter value and field Node.value are both distinct objects or null, or alias of each other 
+-- parameter o/value and field Node.value are both distinct objects or null, or alias of each other 
+{ROOT}:o instanceof java/lang/Object aliases target {R_ANY}.sushi/ncll/NodeCachingLinkedList:header(.sushi/ncll/NodeCachingLinkedList$LinkedListNode:next|.sushi/ncll/NodeCachingLinkedList$LinkedListNode:previous)+.sushi/ncll/NodeCachingLinkedList$LinkedListNode:value;
+{R_ANY}.sushi/ncll/NodeCachingLinkedList:header(.sushi/ncll/NodeCachingLinkedList$LinkedListNode:next|.sushi/ncll/NodeCachingLinkedList$LinkedListNode:previous)+.sushi/ncll/NodeCachingLinkedList$LinkedListNode:value instanceof java/lang/Object aliases target {ROOT}:o;
 {ROOT}:value instanceof java/lang/Object aliases target {R_ANY}.sushi/ncll/NodeCachingLinkedList:header(.sushi/ncll/NodeCachingLinkedList$LinkedListNode:next|.sushi/ncll/NodeCachingLinkedList$LinkedListNode:previous)+.sushi/ncll/NodeCachingLinkedList$LinkedListNode:value;
 {R_ANY}.sushi/ncll/NodeCachingLinkedList:header(.sushi/ncll/NodeCachingLinkedList$LinkedListNode:next|.sushi/ncll/NodeCachingLinkedList$LinkedListNode:previous)+.sushi/ncll/NodeCachingLinkedList$LinkedListNode:value instanceof java/lang/Object aliases target {ROOT}:value;
 

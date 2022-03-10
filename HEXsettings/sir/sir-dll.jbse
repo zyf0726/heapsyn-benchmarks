@@ -1,5 +1,9 @@
 resolve begin
 
+-- parameter o and element can be alias only of field Entry.element
+{ROOT}:o instanceof java/lang/Object aliases target {ROOT}:this.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next|.sir/dll/DoubleLinkedList$Entry:previous)*.sir/dll/DoubleLinkedList$Entry:element;
+{ROOT}:element instanceof java/lang/Object aliases target {ROOT}:this.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next|.sir/dll/DoubleLinkedList$Entry:previous)*.sir/dll/DoubleLinkedList$Entry:element;
+
 -- for all the entries e, e.element is not an entry
 {R_ANY}.sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next|.sir/dll/DoubleLinkedList$Entry:previous)*.sir/dll/DoubleLinkedList$Entry:element instanceof java/lang/Object aliases target {ROOT}:(?!{°}*sir/dll/DoubleLinkedList:header(.sir/dll/DoubleLinkedList$Entry:next|.sir/dll/DoubleLinkedList$Entry:previous)*{EOL}){°}*;
 

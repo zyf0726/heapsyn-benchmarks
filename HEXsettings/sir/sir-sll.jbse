@@ -1,10 +1,12 @@
 resolve begin
 
-
 -- acyclic
 {R_ANY}.sir/sll/MyLinkedList:_header(.sir/sll/MyLinkedList$MyListNode:_next)* instanceof sir/sll/MyLinkedList$MyListNode aliases nothing;
 
--- parameter x can only be alias of field ListNode._element
+-- for all the nodes e, e._element is not a node
+{R_ANY}.sir/sll/MyLinkedList:_header(.sir/sll/MyLinkedList$MyListNode:_next)*.sir/sll/MyLinkedList$MyListNode:_element instanceof java/lang/Object aliases target {ROOT}:(?!{°}*sir/sll/MyLinkedList:_header(.sir/sll/MyLinkedList$MyListNode:_next)*{EOL}){°}*;
+
+-- parameter x can be alias only of field ListNode._element
 {ROOT}:x instanceof java/lang/Object aliases target {ROOT}:this.sir/sll/MyLinkedList:_header(.sir/sll/MyLinkedList$MyListNode:_next)*.sir/sll/MyLinkedList$MyListNode:_element;
 
 resolve end

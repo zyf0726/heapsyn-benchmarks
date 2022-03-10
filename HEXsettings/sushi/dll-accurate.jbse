@@ -3,6 +3,11 @@ resolve begin
 -- abstract lists are expanded to concrete ones (plus list initialization trigger)
 instanceof java/util/List expands to instanceof sushi/dll/LinkedList triggers sushi/dll/LinkedList:(Lsushi/dll/LinkedList;)V:_got_LinkedList:{$REF};
 
+-- parameter o, e and element can be alias only of field Entry.element
+{ROOT}:o instanceof java/lang/Object aliases target {R_ANY}.sushi/dll/LinkedList:header(.sushi/dll/LinkedList$LinkedListEntry:next|.sushi/dll/LinkedList$LinkedListEntry:previous)+.sushi/dll/LinkedList$LinkedListEntry:element;
+{ROOT}:e instanceof java/lang/Object aliases target {R_ANY}.sushi/dll/LinkedList:header(.sushi/dll/LinkedList$LinkedListEntry:next|.sushi/dll/LinkedList$LinkedListEntry:previous)+.sushi/dll/LinkedList$LinkedListEntry:element;
+{ROOT}:element instanceof java/lang/Object aliases target {R_ANY}.sushi/dll/LinkedList:header(.sushi/dll/LinkedList$LinkedListEntry:next|.sushi/dll/LinkedList$LinkedListEntry:previous)+.sushi/dll/LinkedList$LinkedListEntry:element;
+
 -- for all the entries e, e.element is not an entry
 {R_ANY}.sushi/dll/LinkedList:header(.sushi/dll/LinkedList$Entry:next|.sushi/dll/LinkedList$Entry:previous)*.sushi/dll/LinkedList$Entry:element instanceof java/lang/Object aliases target {ROOT}:(?!{°}*sushi/dll/LinkedList:header(.sushi/dll/LinkedList$Entry:next|.sushi/dll/LinkedList$Entry:previous)*{EOL}){°}*;
 

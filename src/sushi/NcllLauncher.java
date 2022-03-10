@@ -144,10 +144,10 @@ public class NcllLauncher {
 		ObjectH cacheSize = specFty.mkVarDecl(SMTSort.INT, "cacheSize");
 		specFty.addRefSpec("ncll", "header", "h1",
 				"size", "size", "cacheSize", "cacheSize");
-		specFty.addRefSpec("h1", "next", "h2");
-		specFty.addRefSpec("h2", "next", "h3");
-		specFty.addRefSpec("h3", "next", "h4");
-		specFty.addRefSpec("h4", "next", "h1");
+		specFty.addRefSpec("h1", "next", "h2", "value", "null");
+		specFty.addRefSpec("h2", "next", "h3", "value", "v");
+		specFty.addRefSpec("h3", "next", "h4", "value", "v");
+		specFty.addRefSpec("h4", "next", "h1", "value", "v");
 		specFty.setAccessible("ncll");
 		Specification spec = specFty.genSpec();
 		
