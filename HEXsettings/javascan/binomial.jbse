@@ -1,0 +1,13 @@
+resolve begin
+
+-- acyclic
+{R_ANY}.javascan/binomial/BinomialHeap:Nodes(.javascan/binomial/BinomialHeap$BinomialHeapNode:child|.javascan/binomial/BinomialHeap$BinomialHeapNode:sibling)* instanceof javascan/binomial/BinomialHeap$BinomialHeapNode aliases nothing;
+
+-- wellConnected
+{R_ANY}.javascan/binomial/BinomialHeap:Nodes.javascan/binomial/BinomialHeap$BinomialHeapNode:parent instanceof javascan/binomial/BinomialHeap$BinomialHeapNode expands to nothing;
+{R_ANY}.javascan/binomial/BinomialHeap:Nodes.javascan/binomial/BinomialHeap$BinomialHeapNode:parent instanceof javascan/binomial/BinomialHeap$BinomialHeapNode aliases nothing;
+{R_ANY}.javascan/binomial/BinomialHeap:Nodes(.javascan/binomial/BinomialHeap$BinomialHeapNode:child|.javascan/binomial/BinomialHeap$BinomialHeapNode:sibling)+.javascan/binomial/BinomialHeap$BinomialHeapNode:parent instanceof javascan/binomial/BinomialHeap$BinomialHeapNode not null;
+{R_ANY}.javascan/binomial/BinomialHeap:Nodes(.javascan/binomial/BinomialHeap$BinomialHeapNode:child|.javascan/binomial/BinomialHeap$BinomialHeapNode:sibling)+.javascan/binomial/BinomialHeap$BinomialHeapNode:parent instanceof javascan/binomial/BinomialHeap$BinomialHeapNode expands to nothing;
+{R_ANY}.javascan/binomial/BinomialHeap:Nodes(.javascan/binomial/BinomialHeap$BinomialHeapNode:child|.javascan/binomial/BinomialHeap$BinomialHeapNode:sibling)+.javascan/binomial/BinomialHeap$BinomialHeapNode:parent instanceof javascan/binomial/BinomialHeap$BinomialHeapNode aliases target {$REF}.{UP}.{UP};
+
+resolve end
