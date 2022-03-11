@@ -132,7 +132,7 @@ public class SkewLauncher {
 		Specification spec = specFty.genSpec();
 		
 		List<Statement> stmts = testGenerator.generateTestWithSpec(spec, heap);
-		Statement.printStatements(stmts, System.out);
+		Statement.printStatements(stmts, "@TestEmpty", System.out);
 		long end = System.currentTimeMillis();
 		System.out.println(">> genTest0: " + (end - start) + "ms\n");
 	}
