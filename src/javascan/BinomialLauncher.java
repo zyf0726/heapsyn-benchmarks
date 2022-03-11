@@ -24,8 +24,6 @@ import heapsyn.wrapper.symbolic.SpecFactory;
 import heapsyn.wrapper.symbolic.Specification;
 import heapsyn.wrapper.symbolic.SymbolicExecutor;
 import heapsyn.wrapper.symbolic.SymbolicExecutorWithCachedJBSE;
-import jbse.apps.run.RunParameters.StateFormatMode;
-import jbse.apps.run.RunParameters.StepShowMode;
 
 import static common.Settings.*;
 
