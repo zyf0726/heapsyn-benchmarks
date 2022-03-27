@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import heapsyn.algo.DynamicGraphBuilder;
-import heapsyn.algo.HeapTransGraphBuilder;
+import heapsyn.algo.StaticGraphBuilder;
 import heapsyn.algo.Statement;
 import heapsyn.algo.TestGenerator;
 import heapsyn.algo.WrappedHeap;
@@ -89,12 +89,12 @@ public class NcllLauncher {
 		long start = System.currentTimeMillis();
 		// WARNNING: 'modCount' is never in a path condition
 		SymbolicExecutor executor = new SymbolicExecutorWithCachedJBSE(fieldFilter);
-		HeapTransGraphBuilder gb = new HeapTransGraphBuilder(executor, methods);
+		StaticGraphBuilder gb = new StaticGraphBuilder(executor, methods);
 		gb.setHeapScope(cls$List, scope$List);
 		gb.setHeapScope(cls$Node, scopeForHeap$Node);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, simplify);
-		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
+		StaticGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
 		testGenerator = new TestGenerator(heaps);
 		long end = System.currentTimeMillis();
 		System.out.println(">> buildGraph (static): " + (end - start) + "ms\n");
@@ -110,7 +110,7 @@ public class NcllLauncher {
 		gb.setHeapScope(cls$Node, scopeForHeap$Node);
 		SymbolicHeap initHeap = new SymbolicHeapAsDigraph(ExistExpr.ALWAYS_TRUE);
 		List<WrappedHeap> heaps = gb.buildGraph(initHeap, maxSeqLength);
-		HeapTransGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
+		DynamicGraphBuilder.__debugPrintOut(heaps, executor, new PrintStream(logFilePath));
 		testGenerator = new TestGenerator(heaps);
 		long end = System.currentTimeMillis();
 		System.out.println(">> buildGraph (dynamic): " + (end - start) + "ms\n");
