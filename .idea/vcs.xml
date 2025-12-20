@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HeapSyn" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HeapSyn/jbse" vcs="Git" />
   </component>
 </project>
