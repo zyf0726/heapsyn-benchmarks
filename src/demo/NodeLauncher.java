@@ -48,7 +48,7 @@ public class NodeLauncher {
 		parms.setTargetClassPath(TARGET_CLASS_PATH);
 		parms.setTargetSourcePath(TARGET_SOURCE_PATH);
 		parms.setShowOnConsole(showOnConsole);
-		parms.setSettingsPath(null);
+		parms.setSettingsPath();
 		parms.setHeapScope(cls$Node, scope$Node);
 	}
 	
