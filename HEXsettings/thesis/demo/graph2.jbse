@@ -1,0 +1,6 @@
+resolve begin
+
+{ROOT}:this.thesis/demo/Graph2:nodes instanceof thesis/common/IntMap aliases nothing;
+{ROOT}:this.thesis/demo/Graph2:edges instanceof thesis/common/IntMap aliases nothing;
+
+resolve end

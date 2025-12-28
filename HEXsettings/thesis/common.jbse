@@ -1,0 +1,7 @@
+resolve begin
+
+{R_ANY}.(thesis/common/IntMap:next)+ instanceof thesis/common/IntMap aliases nothing;
+{R_ANY}.thesis/common/IntMap:value instanceof thesis/common/ValueType not null;
+{R_ANY}.thesis/common/IntMap:value instanceof thesis/common/ValueType aliases nothing;
+
+resolve end
