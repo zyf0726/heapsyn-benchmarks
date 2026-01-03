@@ -10,7 +10,7 @@ public final class ClauseDb {
     private IntMap<Clause> clauses;
     private IntSet falseLits;
 
-    public ClauseDb() {
+    private ClauseDb() {
         this.clauses = IntMap.empty();
         this.falseLits = IntSet.empty();
     }
