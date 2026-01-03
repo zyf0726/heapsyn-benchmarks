@@ -1,5 +1,6 @@
 package thesis.common;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -60,6 +61,24 @@ public final class IntMap<V extends ValueType> {
         if (map == null) return null;
         if (key == map.key) return map.value;
         return get(map.next, key);
+    }
+
+    /**
+     * Get the value associated with a key in the map, throwing if not found.
+     *
+     * @param map the map to search
+     * @param key the key to look for
+     * @param <V> the type of values stored in the map
+     * @return the value associated with the key
+     * @throws NoSuchElementException if the key is not found
+     */
+    public static <V extends ValueType> V getOrThrow(IntMap<V> map, int key) {
+        V value = get(map, key);
+        if (value == null) {
+            throw new NoSuchElementException();
+        } else {
+            return value;
+        }
     }
 
     /**
@@ -168,7 +187,15 @@ public final class IntMap<V extends ValueType> {
         assert size(m) == 5 : "size should be 5";
         assert containsKey(m, 1) && containsKey(m, 5);
         assert !containsKey(m, 9);
+        assert get(m, 9) == null;
+        try {
+            getOrThrow(m, 9);
+            throw new AssertionError("getOrThrow should throw on missing key");
+        } catch (NoSuchElementException expected) {
+            // expected
+        }
         assert get(m, 3).toString().equals("THREE");
+        assert getOrThrow(m, 3).toString().equals("THREE");
 
         String s = toString(m);
         System.out.println("Map: " + s);
@@ -177,11 +204,17 @@ public final class IntMap<V extends ValueType> {
 
         // Remove middle and head and tail
         m = remove(m, 3);
-        assert size(m) == 4 && !containsKey(m, 3);
+        assert size(m) == 4 && !containsKey(m, 3) && get(m, 3) == null;
         m = remove(m, 1);
-        assert size(m) == 3 && !containsKey(m, 1);
+        assert size(m) == 3 && !containsKey(m, 1) && get(m, 5) != null;
         m = remove(m, 5);
         assert size(m) == 2 && !containsKey(m, 5);
+        try {
+            getOrThrow(m, 5);
+            throw new AssertionError("getOrThrow should throw on missing key");
+        } catch (NoSuchElementException expected) {
+            // expected
+        }
 
         // Remove non-existing is no-op
         IntMap<MyVal> m2 = remove(m, 42);
