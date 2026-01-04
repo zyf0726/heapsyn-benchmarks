@@ -75,7 +75,7 @@ public final class IntMap<V extends ValueType> {
     public static <V extends ValueType> V getOrThrow(IntMap<V> map, int key) {
         V value = get(map, key);
         if (value == null) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("key not found: " + key);
         } else {
             return value;
         }
