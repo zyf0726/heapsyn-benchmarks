@@ -1,0 +1,11 @@
+resolve begin
+
+{ROOT}:this.thesis/cozy/redmine/Redmine:projects instanceof thesis/common/IntMap aliases nothing;
+{ROOT}:this.thesis/cozy/redmine/Redmine:issues instanceof thesis/common/IntMap aliases nothing;
+{ROOT}:this.thesis/cozy/redmine/Redmine:issueTrackingModules instanceof thesis/common/IntSet aliases nothing;
+{ROOT}:this.thesis/cozy/redmine/Redmine:closedIssueStatuses instanceof thesis/common/IntSet aliases nothing;
+
+{R_ANY}.thesis/cozy/redmine/Project:modules instanceof thesis/common/IntSet aliases nothing;
+{R_ANY}.thesis/cozy/redmine/Issue:statuses instanceof thesis/common/IntSet aliases nothing;
+
+resolve end
