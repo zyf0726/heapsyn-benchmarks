@@ -1,5 +1,7 @@
 package thesis.common;
 
+import jbse.meta.Analysis;
+
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -18,6 +20,11 @@ public final class IntMap<V extends ValueType> {
         this.key = key;
         this.value = Objects.requireNonNull(value);
         this.next = next;
+    }
+
+    // trigger method for JBSE to recognize the ordering invariant
+    private static <V extends ValueType> void __onNextNonNull(IntMap<V> self) {
+        Analysis.assume(self.next.key > self.key);
     }
 
     /**

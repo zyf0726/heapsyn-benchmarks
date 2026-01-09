@@ -1,5 +1,7 @@
 package thesis.common;
 
+import jbse.meta.Analysis;
+
 /**
  * A simple immutable set of integers, implemented as a sorted linked list.
  */
@@ -11,6 +13,11 @@ public final class IntSet {
     private IntSet(int elem, IntSet next) {
         this.elem = elem;
         this.next = next;
+    }
+
+    // trigger method for JBSE to recognize the ordering invariant
+    private static void __onNextNonNull(IntSet self) {
+        Analysis.assume(self.next.elem > self.elem);
     }
 
     /**
