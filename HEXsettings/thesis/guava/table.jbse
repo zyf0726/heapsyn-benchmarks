@@ -1,0 +1,7 @@
+resolve begin
+
+{ROOT}:this.thesis/guava/collect/table/Table:rowMap instanceof thesis/common/IntMap aliases nothing;
+
+{R_ANY}.thesis/guava/collect/table/Row:columnMap instanceof thesis/common/IntMap aliases nothing;
+
+resolve end
