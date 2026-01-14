@@ -1,0 +1,7 @@
+resolve begin
+
+{ROOT}:this.thesis/guava/graph/graph/MutableGraph:nodes instanceof thesis/common/IntMap aliases nothing;
+
+{R_ANY}.thesis/guava/graph/graph/Node:successors instanceof thesis/common/IntSet aliases nothing;
+
+resolve end
