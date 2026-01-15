@@ -5,7 +5,7 @@ import thesis.common.Launcher;
 public final class MutableGraphLauncher extends Launcher {
 
     private static final String targetClassName = "thesis.guava.graph.graph.MutableGraph";
-    private static final int maxSeqLength       = 8;
+    private static final int maxSeqLength       = 4;
     private static final String logFilePath     = "tmp/thesis/guava/mutgraph.txt";
     private static final String hexFilePath     = "HEXsettings/thesis/guava/mutgraph.jbse";
 
